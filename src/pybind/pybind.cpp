@@ -18,5 +18,5 @@ PYBIND11_MODULE(euklid, m) {
     euklid::mesh::REGISTER(m);
 
 
-    m.attr("__version__") = py::str("0.0.1");
+    m.attr("__version__") = py::str(euklid::version);
 }
