@@ -132,8 +132,11 @@ double PolyLine<VectorClass, T>::walk(double start, double amount) {
     }
 
     int next_value = int(start);
-    if (amount > 0) {
+    if (direction > 0) {
         next_value += 1;
+    }
+    if (start < 0) {
+        next_value -= 1;
     }
     
     if ((double)std::abs(start - next_value) < 1e-5){

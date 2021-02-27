@@ -12,10 +12,16 @@ from distutils.version import LooseVersion
 from distutils.core import setup
 import setuptools
 from setuptools.command.build_ext import build_ext
+from setuptools.command.install import install
 
 packages = []
 package_data = {}
 
+DEBUG = False
+
+if "--debug" in sys.argv:
+    DEBUG = True
+    sys.argv.remove("--debug")
 
 class CMakeExtension(setuptools.Extension):
     def __init__(self, name, sourcedir=''):
@@ -23,6 +29,10 @@ class CMakeExtension(setuptools.Extension):
         self.sourcedir = os.path.abspath(sourcedir)
 
 class CMakeBuild(build_ext):
+    user_options = install.user_options + [
+        ('debug', None, None), # a 'flag' option
+    ]
+
     def run(self):
         try:
             out = subprocess.check_output(['cmake', '--version'])
@@ -46,7 +56,9 @@ class CMakeBuild(build_ext):
         cmake_args = ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + extdir,
                       '-DPYTHON_EXECUTABLE=' + sys.executable]
 
-        cfg = 'Debug' if self.debug else 'Release'
+        cfg = 'Debug' if DEBUG else 'Release'
+
+        cmake_args.append(f"-DCMAKE_BUILD_TYPE={cfg}")
         build_args = ['--config', cfg]
 
         if platform.system() == "Windows":
@@ -67,12 +79,10 @@ class CMakeBuild(build_ext):
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
 
+version = "-"
 with open("src/version.hpp") as version_file:
     #print(version_file.read())
-    version = re.findall(r"const char* version\s=\s['\"]([0-9\._]+)['\"]", version_file.read())
-
-    print(version)
-    #version = re.match(r"\s*version\s=\s['\"]([0-9\._]+)['\"]", version_file.read()).group(1)
+    version = re.findall(r"version\s=\s['\"]([0-9\._]+)['\"]", version_file.read())[0]
 
 with open("README.md") as readme_file:
     long_description = readme_file.read()
@@ -88,5 +98,6 @@ setup(
     install_requires=[],
     author='airgproducts',
     url='http://github.com/airgproducts/euklid',
+    test_suite="tests.test_suite",
     include_package_data=True
 )

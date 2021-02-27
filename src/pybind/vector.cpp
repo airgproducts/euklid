@@ -193,7 +193,7 @@ py::class_<SplineClass> PySpline(py::module m, const char *name) {
                 result["controlpoints"] = to_list<Vector2D>(self.controlpoints.nodes);
                 return result;
             })
-            .def_static("fit", &SplineClass::fit)
+            .def_static("fit", &SplineClass::fit, py::arg("curve"), py::arg("numpoints"))
             .def_readwrite("controlpoints", &SplineClass::controlpoints)
             .def_property("numpoints", &SplineClass::get_numpoints, &SplineClass::set_numpoints)
             .def("copy", &SplineClass::copy)

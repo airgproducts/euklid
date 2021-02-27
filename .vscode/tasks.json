@@ -1,0 +1,26 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "2.0.0",
+
+    "options": {
+        "env": {
+            "DCMAKE_BUILD_TYPE": "Debug"
+        }
+    },
+    "tasks": [
+        {
+            "label": "build_debug",
+            "type": "process",
+            "command": "/bin/pip",
+            "args": [ "install", "--install-option", "--debug", "-e", "." ]
+        },
+        {
+            "label": "build_release",
+            "type": "process",
+            "command": "/bin/pip",
+            "args": [ "install", "." ]
+        }
+    ]
+}
