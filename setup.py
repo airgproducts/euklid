@@ -14,11 +14,8 @@ import setuptools
 from setuptools.command.build_ext import build_ext
 from setuptools.command.install import install
 
-packages = []
-package_data = {}
 
 DEBUG = False
-
 if "--debug" in sys.argv:
     DEBUG = True
     sys.argv.remove("--debug")
@@ -29,10 +26,6 @@ class CMakeExtension(setuptools.Extension):
         self.sourcedir = os.path.abspath(sourcedir)
 
 class CMakeBuild(build_ext):
-    user_options = install.user_options + [
-        ('debug', None, None), # a 'flag' option
-    ]
-
     def run(self):
         try:
             out = subprocess.check_output(['cmake', '--version'])
