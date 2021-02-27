@@ -4,9 +4,10 @@
 #include <set>
 #include <vector>
 #include <memory>
-#include "euklid/vector/vector.hpp"
 
-namespace openglider::mesh {
+#include "vector/vector.hpp"
+
+namespace euklid::mesh {
 
     using match_vector = std::vector<std::tuple<int, int>>;
 

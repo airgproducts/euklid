@@ -2,8 +2,8 @@
 
 #include <functional>
 
-#include "euklid/vector/vector.hpp"
-#include "euklid/polyline/polyline_2d.hpp"
+#include "vector/vector.hpp"
+#include "polyline/polyline_2d.hpp"
 
 
 class BezierBase {

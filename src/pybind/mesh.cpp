@@ -1,9 +1,9 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-#include "mesh.hpp"
+#include "mesh/mesh.hpp"
 
-namespace openglider::mesh {
+namespace euklid::mesh {
 
     void REGISTER(pybind11::module m) {
         // test_nested_modules

@@ -2,6 +2,7 @@
 
 #include<vector>
 #include <iostream>
+
 #include "util/math.hpp"
 
 template<size_t dimensions, typename T>

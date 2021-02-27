@@ -1,6 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.3)
 
-PROJECT(openglider_cpp)
+PROJECT(euklid)
 
 #set(CMAKE_C_COMPILER)
 set(CMAKE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
@@ -40,6 +40,4 @@ else()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
 
-ADD_SUBDIRECTORY("src" "openglider_cpp")
-
-#ADD_SUBDIRECTORY("tests/")
+ADD_SUBDIRECTORY("src" "euklid")

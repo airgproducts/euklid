@@ -1,4 +1,4 @@
-#include "euklid/polyline/interpolation.hpp"
+#include "polyline/interpolation.hpp"
 
 double Interpolation::get_value(double x) const {
     Vector2D p1(x, 0);

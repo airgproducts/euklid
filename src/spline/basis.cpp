@@ -1,4 +1,4 @@
-#include "euklid/spline/basis.hpp"
+#include "spline/basis.hpp"
 
 
 size_t choose(size_t n, size_t k) {

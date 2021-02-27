@@ -1,4 +1,4 @@
-#include "vector.hpp"
+#include "vector/vector.hpp"
 
 template<size_t dimensions, typename T>
 Vector<dimensions, T>::Vector(const T& in) {

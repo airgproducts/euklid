@@ -1,4 +1,4 @@
-#include "euklid/polyline/polyline_2d.hpp"
+#include "polyline/polyline_2d.hpp"
 
 
 class Interpolation : public PolyLine2D {

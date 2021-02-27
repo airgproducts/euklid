@@ -67,9 +67,12 @@ class CMakeBuild(build_ext):
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
 
-with open("openglider/version.py") as version_file:
+with open("src/version.hpp") as version_file:
     #print(version_file.read())
-    version = re.match(r"__version__\s=\s['\"]([0-9\._]+)['\"]", version_file.read()).group(1)
+    version = re.findall(r"const char* version\s=\s['\"]([0-9\._]+)['\"]", version_file.read())
+
+    print(version)
+    #version = re.match(r"\s*version\s=\s['\"]([0-9\._]+)['\"]", version_file.read()).group(1)
 
 with open("README.md") as readme_file:
     long_description = readme_file.read()

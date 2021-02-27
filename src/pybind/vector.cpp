@@ -3,12 +3,13 @@
 #include <pybind11/operators.h>
 
 #include <vector>
-#include "euklid/transform.hpp"
-#include "euklid/vector/vector.hpp"
-#include "euklid/polyline/polyline.hpp"
-#include "euklid/polyline/polyline_2d.hpp"
-#include "euklid/polyline/interpolation.hpp"
-#include "euklid/spline/spline.hpp"
+
+#include "vector/transform.hpp"
+#include "vector/vector.hpp"
+#include "polyline/polyline.hpp"
+#include "polyline/polyline_2d.hpp"
+#include "polyline/interpolation.hpp"
+#include "spline/spline.hpp"
 
 namespace py = pybind11;
 using namespace py::literals;
@@ -200,10 +201,10 @@ py::class_<SplineClass> PySpline(py::module m, const char *name) {
             .def("get_sequence", &SplineClass::get_sequence, py::arg("num"));
 }
 
-namespace openglider::euklid {
+namespace euklid::vector {
 
     void REGISTER(pybind11::module module) {
-        pybind11::module m = module.def_submodule("euklid");
+        pybind11::module m = module.def_submodule("vector");
 
 
         m.def("cut", &cut_2d);

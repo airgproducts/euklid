@@ -3,9 +3,9 @@
 #include <functional>
 #include <Eigen/Dense>
 
-#include "euklid/vector/vector.hpp"
-#include "euklid/polyline/polyline_2d.hpp"
-#include "euklid/spline/basis.hpp"
+#include "vector/vector.hpp"
+#include "polyline/polyline_2d.hpp"
+#include "spline/basis.hpp"
 
 
 template<typename Base, typename T>

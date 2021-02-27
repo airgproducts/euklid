@@ -3,9 +3,9 @@
 #include <array>
 #include<cmath>
 
-#include "euklid/vector/vector.hpp"
-#include "euklid/polyline/polyline.hpp"
-#include "euklid/polyline/polyline_2d.hpp"
+#include "vector/vector.hpp"
+#include "polyline/polyline.hpp"
+#include "polyline/polyline_2d.hpp"
 
 
 

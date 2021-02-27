@@ -1,4 +1,4 @@
-#include "euklid/spline/spline.hpp"
+#include "spline/spline.hpp"
 
 
 template<typename Base, typename T>

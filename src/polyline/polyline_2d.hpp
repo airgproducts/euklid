@@ -1,9 +1,9 @@
 #pragma once
 
 #include "util/math.hpp"
-#include "euklid/vector/vector.hpp"
-#include "euklid/polyline/polyline.hpp"
-#include "euklid/vector/rotation_2d.hpp"
+#include "vector/vector.hpp"
+#include "polyline/polyline.hpp"
+#include "vector/rotation_2d.hpp"
 
 class PolyLine2D : public PolyLine<Vector2D, PolyLine2D> {
     public:

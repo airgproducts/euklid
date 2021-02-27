@@ -1,5 +1,5 @@
-#include "polyline_2d.hpp"
-#include "polyline.cpp"
+#include "polyline/polyline.cpp"
+#include "polyline/polyline_2d.hpp"
 //#include "common.cpp"
 
 

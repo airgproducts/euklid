@@ -1,6 +1,6 @@
 #pragma once
 
-#include "vector.hpp"
+#include "vector/vector.hpp"
 #include <math.h>
 
 class Rotation2D {

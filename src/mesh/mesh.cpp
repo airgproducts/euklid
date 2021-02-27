@@ -1,6 +1,6 @@
 #include "mesh/mesh.hpp"
 
-namespace openglider::mesh
+namespace euklid::mesh
 {
     template<typename proptype>
     void PropertyList<proptype>::set_value(std::string key, proptype value) {

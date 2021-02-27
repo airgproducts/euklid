@@ -1,4 +1,4 @@
-#include "euklid/polyline/polyline.hpp"
+#include "polyline/polyline.hpp"
 
 template<typename VectorClass, typename T>
 PolyLine<VectorClass, T>::PolyLine() : nodes() {}
