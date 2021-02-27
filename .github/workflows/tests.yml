@@ -31,4 +31,4 @@ jobs:
           pip install .
       - name: test
         run: |
-          python testall.py
+          python tests.py
