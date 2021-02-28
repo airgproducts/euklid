@@ -17,11 +17,11 @@ Transformation Transformation::rotation(double angle, Vector3D axis) {
     auto result = Transformation();
     double a = cos(angle / 2);
 
-    axis.normalize();
+    auto axis_0 = axis.normalized();
 
-    double b = axis.get_item(0) * sin(angle/2);
-    double c = axis.get_item(1) * sin(angle/2);
-    double d = axis.get_item(2) * sin(angle/2);
+    double b = axis_0.get_item(0) * sin(angle/2);
+    double c = axis_0.get_item(1) * sin(angle/2);
+    double d = axis_0.get_item(2) * sin(angle/2);
 
     result.matrix[0][0] = a*a + b*b - c*c - d*d;
     result.matrix[0][1] = 2* (b*c - a*d);

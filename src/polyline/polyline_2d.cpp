@@ -9,20 +9,21 @@ PolyLine2D PolyLine2D::normvectors() {
     std::vector<std::shared_ptr<Vector2D>> normvectors;
 
     for (auto segment: segments) {
-        auto normal = std::make_shared<Vector2D>();
+        Vector2D normal;
         
-        normal->set_item(0, segment->get_item(1));
-        normal->set_item(1, -segment->get_item(0));
-        normal->normalize();
-        segment_normals.push_back(normal);
+        normal.set_item(0, segment->get_item(1));
+        normal.set_item(1, -segment->get_item(0));
+
+        auto normal_0 = std::make_shared<Vector2D>(normal.normalized());
+
+        segment_normals.push_back(normal_0);
     }
 
     normvectors.push_back(segment_normals[0]);
 
     
     for (size_t i=0; i<segment_normals.size()-1; i++) {
-        Vector2D normal = (*segment_normals[i] + *segment_normals[i+1]);
-        normal.normalize();
+        Vector2D normal = (*segment_normals[i] + *segment_normals[i+1]).normalized();
         //auto normal = segment_normals[i]->copy();
 
         normvectors.push_back(std::make_shared<Vector2D>(normal));

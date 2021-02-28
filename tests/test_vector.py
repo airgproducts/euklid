@@ -117,11 +117,9 @@ class TestVector2D(TestVector3D):
             if i==0:
                 segment = segments[0]
             else:
-                s1 = segments[i-1]
-                s2 = segments[i]
-
-                s1.normalize()
-                s2.normalize()
+                s1 = segments[i-1].normalized()
+                s2 = segments[i].normalized()
+                
                 segment = s1+s2
 
 
@@ -136,8 +134,7 @@ class TestVector2D(TestVector3D):
         for thalist in self.vectors:
             i = random.randint(1, len(thalist)-3)
             normv = thalist.normvectors().nodes
-            dirr = normv[i].copy()
-            dirr.normalize()
+            dirr = normv[i].normalized()
             #dirr = vector.normalize(normv[i-i % 1])+vector.normalize(normv[i - i % 1 + 1])
             dirr *= 0.001
 
