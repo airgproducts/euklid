@@ -35,7 +35,7 @@ double Vector<dimensions, T>::dot(const Vector<dimensions, T>& v2) {
 }*/
 
 template<size_t dimensions, typename T>
-double Vector<dimensions, T>::dot(const T& v2) {
+double Vector<dimensions, T>::dot(const T& v2) const {
     double result = 0;
 
     for (size_t i=0; i<dimensions; i++) {
@@ -47,9 +47,10 @@ double Vector<dimensions, T>::dot(const T& v2) {
 
 
 template<size_t dimensions, typename T>
-double Vector<dimensions, T>::length(){
+double Vector<dimensions, T>::length() const {
     return sqrt(this->dot(static_cast<T>(*this)));
 }
+
 
 template<size_t dimensions, typename T>
 double Vector<dimensions, T>::get_item(int n) const {
@@ -131,22 +132,25 @@ T Vector<dimensions, T>::operator* (const double& factor) const {
 }
 
 template<size_t dimensions, typename T>
-double Vector<dimensions, T>::distance(const T& v2) {
+double Vector<dimensions, T>::distance(const T& v2) const {
     return ((*this) - v2).length();
 }
 
 template<size_t dimensions, typename T>
-T Vector<dimensions, T>::copy() {
+T Vector<dimensions, T>::copy() const {
     return T(*this);
 }
 
 template<size_t dimensions, typename T>
-void Vector<dimensions, T>::normalize() {
+T Vector<dimensions, T>::normalized() const {
+    T result;
     double len = this->length();
 
     for (size_t i=0; i<dimensions; i++) {
-        this->set_item(i, this->get_item(i)/len);
+        result.set_item(i, this->get_item(i)/len);
     }
+
+    return result;
 }
 
 Vector2D::Vector2D(double x, double y) {

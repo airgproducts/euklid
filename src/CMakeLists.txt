@@ -33,6 +33,3 @@ if(OpenMP_CXX_FOUND)
 endif()
 
 target_link_libraries(euklid PUBLIC Eigen3::Eigen)
-#if(OpenMP_CXX_FOUND)
-#    target_link_libraries(gpufem_cpp PUBLIC OpenMP::OpenMP_CXX)
-#endif()

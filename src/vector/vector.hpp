@@ -27,14 +27,14 @@ class Vector {
         T operator *(const double&) const;
 
 
-        double dot(const T& v2);
+        double dot(const T& v2) const;
         //double dot(const T& v2);
-        double distance(const T& v2);
-        double length();
+        double distance(const T& v2) const;
+        double length() const;
 
-        void normalize();
+        T normalized() const;
 
-        T copy();
+        T copy() const;
     
     //private:
         double coordinates[dimensions];

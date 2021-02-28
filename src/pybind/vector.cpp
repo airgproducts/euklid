@@ -129,7 +129,7 @@ py::class_<VectorType, std::shared_ptr<VectorType>> PyVector(py::module_ m, cons
             .def("dot", &VectorType::dot)
             .def("length", &VectorType::length)
             .def("copy", &VectorType::copy)
-            .def("normalize", &VectorType::normalize);
+            .def("normalized", &VectorType::normalized);
 }
 
 template<typename PolyLineType, typename VectorClass>
