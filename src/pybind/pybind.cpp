@@ -5,6 +5,8 @@
 #include "version.hpp"
 #include "pybind/mesh.cpp"
 #include "pybind/vector.cpp"
+#include "pybind/spline.cpp"
+#include "pybind/plane.cpp"
 
 
 namespace py = pybind11;
@@ -16,6 +18,8 @@ PYBIND11_MODULE(euklid, m) {
 
     euklid::vector::REGISTER(m);
     euklid::mesh::REGISTER(m);
+    euklid::spline::REGISTER(m);
+    euklid::plane::REGISTER(m);
 
 
     m.attr("__version__") = py::str(euklid::version);

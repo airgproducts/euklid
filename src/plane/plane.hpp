@@ -1,3 +1,5 @@
+#pragma once
+
 #include "vector/transform.hpp"
 
 namespace euklid::plane {
@@ -7,19 +9,17 @@ class Plane {
         Plane(Transformation t);
         Plane(Vector3D, Vector3D, Vector3D);
 
-        Vector3D align(Vector3D&) const;
-        Vector3D align(Vector2D&) const;
-
-        Vector2D project(Vector3D&) const;
-
-        Vector3D p0() const;
-        Vector3D x_vector() const;
-        Vector3D y_vector() const;
-        Vector3D normvector() const;
-
-        Transformation transformation;
+        Vector2D project(const Vector3D&) const;
+        PolyLine2D project(const PolyLine3D&) const;
 
     private:
+        void setup();
+        Vector3D x_vector;
+        Vector3D y_vector;
+        Vector3D normvector;
+        Vector3D p0;
+
+        Transformation transformation;
 
 };
 

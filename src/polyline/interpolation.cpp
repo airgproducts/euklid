@@ -12,18 +12,18 @@ double Interpolation::get_value(double x) const {
     auto cuts = this->cut(p1, p2);
     size_t size = this->nodes.size();
 
-    if (cuts.size() <= 0) {
-        throw std::runtime_error("No match!");
-    }
-
-    for (auto& cut: cuts) {
-        bool contained = cut.first >= 0 && cut.first <= size - 1;
-        if (this->extrapolate || contained) {
-            return this->get(cut.first)->get_item(1);
+    if (cuts.size() > 0) {
+        for (auto& cut: cuts) {
+            bool contained = cut.first >= 0 && cut.first <= size - 1;
+            if (this->extrapolate || contained) {
+                return this->get(cut.first)->get_item(1);
+            }
         }
     }
     
-    throw std::runtime_error("No match!");
+    std::stringstream errMsg;
+    errMsg << "Could not cut for x: " << x;
+    throw std::runtime_error(errMsg.str().c_str());
 
 }
 

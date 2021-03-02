@@ -12,6 +12,7 @@ set(CPP_FILES
         spline/basis.cpp
         spline/spline.cpp
         mesh/mesh.cpp
+        plane/plane.cpp
         )
 
 set(HEADER_FILES
@@ -23,6 +24,7 @@ set(HEADER_FILES
         polyline/interpolation.hpp
         spline/basis.hpp
         spline/spline.hpp
+        plane/plane.hpp
         )
 
 
