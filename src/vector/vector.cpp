@@ -22,17 +22,6 @@ Vector<dimensions, T>::Vector(double value) {
     }
 }
 
-/*
-template<size_t dimensions, typename T>
-double Vector<dimensions, T>::dot(const Vector<dimensions, T>& v2) {
-    double result = 0;
-
-    for (size_t i=0; i<dimensions; i++) {
-        result += this->get_item(i) * v2.get_item(i);
-    }
-
-    return result;
-}*/
 
 template<size_t dimensions, typename T>
 double Vector<dimensions, T>::dot(const T& v2) const {
@@ -153,6 +142,30 @@ T Vector<dimensions, T>::normalized() const {
     return result;
 }
 
+
+template<size_t dimensions, typename T>
+std::string Vector<dimensions, T>::repr() const {
+    std::stringstream out;
+    
+    out << "Vector" << T::dimension << "D";
+
+    //repr += name;
+    out << "(";
+    
+    for (int i=0; i<T::dimension; i++) {
+        out << std::fixed << std::setprecision(4) << this->get_item(i);
+
+        if (i+1 < T::dimension) {
+            out << " ";
+        }
+    }
+
+    //repr.resize(repr.size()-1);
+    out << ")";
+    
+    return out.str();
+}
+
 Vector2D::Vector2D(double x, double y) {
     this->set_item(0, x);
     this->set_item(1, y);
@@ -173,6 +186,16 @@ Vector3D::Vector3D() {
 
 double Vector2D::cross(const Vector2D& v2) const {
     return (*this)[0] * v2[1] - v2[0] * (*this)[1];
+}
+
+Vector3D Vector3D::cross(const Vector3D& v2) const {
+    Vector3D result;
+
+    result.set_item(0,  ( (*this)[1] * v2[2] - (*this)[2] * v2[1] ));
+    result.set_item(1, -( (*this)[0] * v2[2] + (*this)[2] * v2[0] ));
+    result.set_item(2,  ( (*this)[0] * v2[1] - (*this)[1] * v2[0] ));
+
+    return result;
 }
 
 

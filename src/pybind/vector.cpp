@@ -51,6 +51,7 @@ py::list to_list(std::vector<std::shared_ptr<VectorType>> data) {
     return nodes;
 }
 
+
 template<typename VectorType>
 py::class_<VectorType, std::shared_ptr<VectorType>> PyVector(py::module_ m, const char *name) {
     return py::class_<VectorType, std::shared_ptr<VectorType>>(m, name)
@@ -103,32 +104,15 @@ py::class_<VectorType, std::shared_ptr<VectorType>> PyVector(py::module_ m, cons
                 }
                 return result;
             })
-            .def("__str__", [](const VectorType &v) {
-                std::string out;
-                out += "(";
-                for (int i=0; i<VectorType::dimension; i++) {
-                    out += "{:.4} "_s.format(v.get_item(i));
-                }
-                out.resize(out.size()-1);
-                out += ")";
-                return out;
-            })
-            .def("__repr__", [name](const VectorType &v) {
-                std::string out = name;
-                out += "(";
-                for (int i=0; i<VectorType::dimension; i++) {
-                    out += "{:.4} "_s.format(v.get_item(i));
-                }
-                out.resize(out.size()-1);
-                out += ")";
-                return out;
-            })
+            .def("__str__", &VectorType::repr)
+            .def("__repr__", &VectorType::repr)
             .def(py::self + py::self)
             .def(py::self - py::self)
             .def(py::self * double())
             .def("dot", &VectorType::dot)
             .def("length", &VectorType::length)
             .def("copy", &VectorType::copy)
+            .def("cross", &VectorType::cross)
             .def("normalized", &VectorType::normalized);
 }
 
@@ -154,6 +138,25 @@ py::class_<PolyLineType> PyPolyLine(py::module_ m, const char *name) {
             py::dict result;
             result["nodes"] = to_list<VectorClass>(self.nodes);
             return result;
+        })
+        .def("__repr__", [](PolyLineType& self) {
+            std::string result = "PolyLine";
+            
+            result += std::to_string(VectorClass::dimension);
+            result += "D[\n";
+
+            for (auto node: self.nodes) {
+                result += "  ";
+                result += node->repr();
+                result += ",\n";
+            }
+
+            result.resize(result.size()-3);
+
+            result += "\n]";
+
+            return result;
+
         })
         .def("get", py::overload_cast<const double>(&PolyLineType::get, py::const_))
         .def("get", py::overload_cast<const double, const double>(&PolyLineType::get, py::const_))
@@ -244,8 +247,7 @@ namespace euklid::vector {
         py::implicitly_convertible<py::tuple, Vector3D>();
         py::implicitly_convertible<py::list,  Vector3D>();
 
-        PyVector<Vector2D>(m, "Vector2D")
-            .def("cross", &Vector2D::cross);
+        PyVector<Vector2D>(m, "Vector2D");
 
         py::implicitly_convertible<py::tuple, Vector2D>();
         py::implicitly_convertible<py::list,  Vector2D>();
@@ -267,6 +269,10 @@ namespace euklid::vector {
         py::implicitly_convertible<py::list,  PolyLine2D>();
 
         PyPolyLine<Interpolation, Vector2D>(m, "Interpolation")
+            .def(py::init([](py::list t, bool extrapolate) {
+                auto lst = get_vector_list<py::list, Vector2D>(t);
+                return Interpolation(lst, extrapolate);
+            }), py::arg("nodes"), py::arg("extrapolate"))
             .def("get_value", &Interpolation::get_value)
             .def("__mul__", [](const Interpolation& in, double factor) {
                 return in * factor;

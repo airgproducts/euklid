@@ -1,15 +1,30 @@
 #include "polyline/interpolation.hpp"
 
+Interpolation::Interpolation(std::vector<std::shared_ptr<Vector2D>>& nodes, bool extrapolate) : 
+    PolyLine2D(nodes),
+    extrapolate(extrapolate)
+    {}
+
+
 double Interpolation::get_value(double x) const {
     Vector2D p1(x, 0);
     Vector2D p2(x, 1);
     auto cuts = this->cut(p1, p2);
+    size_t size = this->nodes.size();
 
     if (cuts.size() <= 0) {
         throw std::runtime_error("No match!");
     }
 
-    return this->get(cuts[0].first)->get_item(1);
+    for (auto& cut: cuts) {
+        bool contained = cut.first >= 0 && cut.first <= size - 1;
+        if (this->extrapolate || contained) {
+            return this->get(cut.first)->get_item(1);
+        }
+    }
+    
+    throw std::runtime_error("No match!");
+
 }
 
 

@@ -2,6 +2,9 @@
 
 #include<vector>
 #include <iostream>
+#include <iomanip>
+#include <typeinfo>
+#include <sstream>
 
 #include "util/math.hpp"
 
@@ -18,6 +21,8 @@ class Vector {
 
         double get_item(int n) const;
         void set_item(int n, double value);
+
+        std::string repr() const;
 
         double& operator[] (int n);
         double operator[] (int n) const;
@@ -57,6 +62,9 @@ class Vector3D : public Vector<3, Vector3D> {
         Vector3D();
         Vector3D(const Vector<3, Vector3D>&);
         Vector3D(double x, double y, double z);
+
+        Vector3D cross(const Vector3D&) const;
+
 };
 
 
