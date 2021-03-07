@@ -108,6 +108,7 @@ py::class_<VectorType, std::shared_ptr<VectorType>> PyVector(py::module_ m, cons
             .def("__repr__", &VectorType::repr)
             .def(py::self + py::self)
             .def(py::self - py::self)
+            .def(py::self * py::self)
             .def(py::self * double())
             .def("dot", &VectorType::dot)
             .def("length", &VectorType::length)
@@ -157,6 +158,19 @@ py::class_<PolyLineType> PyPolyLine(py::module_ m, const char *name) {
 
             return result;
 
+        })
+        .def("tolist", [](PolyLineType& line) {
+            py::list result;
+
+            for (auto node: line.nodes) {
+                py::list result_this;
+                for (size_t i=0; i<VectorClass::dimension; i++) {
+                    result_this.append(node->get_item(i));
+                }
+                result.append(result_this);
+            }
+
+            return result;
         })
         .def("get", py::overload_cast<const double>(&PolyLineType::get, py::const_))
         .def("get", py::overload_cast<const double, const double>(&PolyLineType::get, py::const_))
