@@ -23,10 +23,17 @@ PolyLine2D PolyLine2D::normvectors() {
 
     
     for (size_t i=0; i<segment_normals.size()-1; i++) {
-        Vector2D normal = (*segment_normals[i] + *segment_normals[i+1]).normalized();
+        Vector2D normal = *segment_normals[i] + *segment_normals[i+1];
+
+        if (normal.length() > 1e-10) {
+            normvectors.push_back(std::make_shared<Vector2D>(normal.normalized()));
+        } else {
+            // n1 and n2 are opposite -> add normalized segment
+            size_t index = std::max<size_t>(0, i-1);
+            normvectors.push_back(std::make_shared<Vector2D>(segments[index]->normalized()));
+        }
         //auto normal = segment_normals[i]->copy();
 
-        normvectors.push_back(std::make_shared<Vector2D>(normal));
     }
     
 
