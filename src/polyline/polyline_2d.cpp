@@ -75,6 +75,7 @@ std::vector<std::pair<double, double>> PolyLine2D::cut(Vector2D& p1, Vector2D& p
         if (result.success && 0. < result.ik_1 && result.ik_1 <= 1.) {
             results.push_back(std::pair<double, double>(result.ik_1+i, result.ik_2));
         } else if (-1e-5 < result.ik_1 && result.ik_1 <= 0 && 1 < last_result.ik_1 && last_result.ik_1 < 1+1e-5) {
+            // catch cuts falling straight on a point
             results.push_back(std::pair<double, double>(last_result.ik_1+i-1, last_result.ik_2));
         }
 
