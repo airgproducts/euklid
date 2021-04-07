@@ -78,9 +78,7 @@ py::class_<VectorType, std::shared_ptr<VectorType>> PyVector(py::module_ m, cons
                         vec.set_item(i, t[i].cast<double>());
                     }
                     return vec;
-                }))        
-            //.def_readwrite("x", &VectorType::x)
-            //.def_readwrite("y", &VectorType::y)
+                }))
             .def("__getitem__", [](const VectorType &v, size_t i) {
                     return v.get_item(i);
             })
@@ -229,13 +227,10 @@ namespace euklid::vector {
             .def_readonly("point", &CutResult::point);
 
         PyVector<Vector3D>(m, "Vector3D");
-            //.def_readwrite("z", &Vector3D::z);
-
         py::implicitly_convertible<py::tuple, Vector3D>();
         py::implicitly_convertible<py::list,  Vector3D>();
 
         PyVector<Vector2D>(m, "Vector2D");
-
         py::implicitly_convertible<py::tuple, Vector2D>();
         py::implicitly_convertible<py::list,  Vector2D>();
 
