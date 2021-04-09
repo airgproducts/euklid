@@ -54,6 +54,7 @@ class Vector2D: public Vector<2, Vector2D> {
         Vector2D(double x, double y);
 
         double cross(const Vector2D&) const;
+        double angle() const;
 };
 
 class Vector3D : public Vector<3, Vector3D> {

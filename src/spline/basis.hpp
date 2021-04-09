@@ -6,6 +6,9 @@
 #include "polyline/polyline_2d.hpp"
 
 
+namespace euklid::spline {
+
+
 class BezierBase {
     public:
         BezierBase(size_t size);
@@ -33,3 +36,4 @@ class BSplineBase {
         std::vector<std::function<double(double)>> bases;
 };
 
+} // namespace euklid::spline

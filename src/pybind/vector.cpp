@@ -230,7 +230,8 @@ namespace euklid::vector {
         py::implicitly_convertible<py::tuple, Vector3D>();
         py::implicitly_convertible<py::list,  Vector3D>();
 
-        PyVector<Vector2D>(m, "Vector2D");
+        PyVector<Vector2D>(m, "Vector2D")
+            .def("angle", &Vector2D::angle);
         py::implicitly_convertible<py::tuple, Vector2D>();
         py::implicitly_convertible<py::list,  Vector2D>();
 
@@ -243,8 +244,9 @@ namespace euklid::vector {
             .def("normvectors", &PolyLine2D::normvectors)
             .def("offset", &PolyLine2D::offset)
             .def("mirror", &PolyLine2D::mirror)
-            .def("cut", py::overload_cast<Vector2D&, Vector2D&>(&PolyLine2D::cut, py::const_))
-            .def("cut", py::overload_cast<Vector2D&, Vector2D&, const double>(&PolyLine2D::cut, py::const_))
+            .def("cut", py::overload_cast<const Vector2D&, const Vector2D&>(&PolyLine2D::cut, py::const_))
+            .def("cut", py::overload_cast<const Vector2D&, const Vector2D&, const double>(&PolyLine2D::cut, py::const_))
+            .def("cut", py::overload_cast<const PolyLine2D&>(&PolyLine2D::cut, py::const_))
             .def("fix_errors", &PolyLine2D::fix_errors);
 
         py::implicitly_convertible<py::tuple, PolyLine2D>();

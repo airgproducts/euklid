@@ -25,7 +25,7 @@ PolyLine2D PolyLine2D::normvectors() {
     for (size_t i=0; i<segment_normals.size()-1; i++) {
         Vector2D normal = *segment_normals[i] + *segment_normals[i+1];
 
-        if (normal.length() > 1e-10) {
+        if (normal.length() > small_d) {
             normvectors.push_back(std::make_shared<Vector2D>(normal.normalized()));
         } else {
             // n1 and n2 are opposite -> add normalized segment
@@ -53,7 +53,9 @@ PolyLine2D PolyLine2D::offset(double amount) {
     return PolyLine2D(nodes);
 }
 
-std::vector<std::pair<double, double>> PolyLine2D::cut(Vector2D& p1, Vector2D& p2) const {
+static const double tolerance = 1e-5;
+
+std::vector<std::pair<double, double>> PolyLine2D::cut(const Vector2D& p1, const Vector2D& p2) const {
     std::vector<std::pair<double, double>> results;
     if (this->nodes.size() < 2) {
         return results;
@@ -74,7 +76,7 @@ std::vector<std::pair<double, double>> PolyLine2D::cut(Vector2D& p1, Vector2D& p
 
         if (result.success && 0. < result.ik_1 && result.ik_1 <= 1.) {
             results.push_back(std::pair<double, double>(result.ik_1+i, result.ik_2));
-        } else if (-1e-5 < result.ik_1 && result.ik_1 <= 0 && 1 < last_result.ik_1 && last_result.ik_1 < 1+1e-5) {
+        } else if (-tolerance < result.ik_1 && result.ik_1 <= 0 && 1 < last_result.ik_1 && last_result.ik_1 < 1+tolerance) {
             // catch cuts falling straight on a point
             results.push_back(std::pair<double, double>(last_result.ik_1+i-1, last_result.ik_2));
         }
@@ -92,7 +94,7 @@ std::vector<std::pair<double, double>> PolyLine2D::cut(Vector2D& p1, Vector2D& p
 
 }
 
-std::pair<double, double> PolyLine2D::cut(Vector2D& v1, Vector2D& v2, double nearest_ik) const {
+std::pair<double, double> PolyLine2D::cut(const Vector2D& v1, const Vector2D& v2, double nearest_ik) const {
     using cut = std::pair<double, double>;
     auto cuts = this->cut(v1, v2);
     
@@ -107,8 +109,26 @@ std::pair<double, double> PolyLine2D::cut(Vector2D& v1, Vector2D& v2, double nea
     return cuts[0];
 }
 
+std::vector<std::pair<double, double>> PolyLine2D::cut(const PolyLine2D& l2) const {
+    std::vector<std::pair<double, double>> result;
 
-PolyLine2D PolyLine2D::fix_errors() {
+
+    for (size_t i=0; i<l2.nodes.size()-1; i++) {
+        auto cuts = this->cut(*l2.nodes[i], *l2.nodes[i+1]);
+
+        for (auto cut: cuts) {
+            if (-tolerance < cut.second && cut.second < 1+tolerance && -tolerance < cut.first && cut.first < this->nodes.size()-1+tolerance) {
+                result.push_back({cut.first, i+cut.second});
+            }
+
+        }
+    }
+
+    return result;
+}
+
+
+PolyLine2D PolyLine2D::fix_errors() const {
     if (this->nodes.size() <= 4) {
         return this->copy();
     }
@@ -122,7 +142,7 @@ PolyLine2D PolyLine2D::fix_errors() {
         std::reverse(cuts.begin(), cuts.end());
 
         for (auto result: cuts) {
-            if (0 <= result.first && result.first < line2.nodes.size()-1-1e-10 && 0 <= result.second && result.second < 1) {
+            if (0 <= result.first && result.first < line2.nodes.size()-1-small_d && 0 <= result.second && result.second < 1) {
                 
                 std::vector<std::shared_ptr<Vector2D>> new_nodes;
                 // new line: 0 to i and result to end
@@ -134,7 +154,7 @@ PolyLine2D PolyLine2D::fix_errors() {
 
                 int start_2 = int(result.first) + 1;
 
-                if (std::abs(result.first-start_2) < 1e-5) {
+                if (std::abs(result.first-start_2) < tolerance) {
                     start_2 += 1;
                 }
 
@@ -157,7 +177,7 @@ PolyLine2D PolyLine2D::fix_errors() {
     nodes_new.push_back(std::make_shared<Vector2D>(*this->nodes[0]));
 
     for (size_t i=0; i<segment_lengthes.size(); i++){
-        if (segment_lengthes[i] > 1e-5) {
+        if (segment_lengthes[i] > tolerance) {
             nodes_new.push_back(std::make_shared<Vector2D>(*this->nodes[i+1]));
         }
     }

@@ -1,5 +1,6 @@
 #include "spline/basis.hpp"
 
+namespace euklid::spline {
 
 size_t choose(size_t n, size_t k) {
     if (k <= n) {
@@ -125,3 +126,5 @@ size_t BSplineBase<degree>::dimension() const {
 
 
 template class BSplineBase<2>;
+
+} // namespace euklid::spline

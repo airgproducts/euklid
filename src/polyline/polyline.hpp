@@ -19,8 +19,8 @@ template<typename VectorType, typename T>
 
             int numpoints();
             double get_length();
-            std::vector<std::shared_ptr<VectorType>> get_segments();
-            std::vector<double> get_segment_lengthes();
+            std::vector<std::shared_ptr<VectorType>> get_segments() const;
+            std::vector<double> get_segment_lengthes() const;
             
             double walk(double start, double amount);
 

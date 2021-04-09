@@ -11,9 +11,9 @@ class Rotation2D {
         void set_angle(double radians) {
             // np.array([[np.cos(angle), np.sin(angle)], [-np.sin(angle), np.cos(angle)]])
             this->entries[0][0] = cos(radians);
-            this->entries[0][1] = sin(radians);
+            this->entries[0][1] = -sin(radians);
 
-            this->entries[1][0] = -sin(radians);
+            this->entries[1][0] = sin(radians);
             this->entries[1][1] = cos(radians);
         }
 

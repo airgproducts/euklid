@@ -8,6 +8,9 @@
 #include "spline/basis.hpp"
 
 
+namespace euklid::spline {
+        
+
 template<typename Base, typename T>
 class SplineCurve {
     public:
@@ -64,3 +67,5 @@ class SymmetricBSplineCurve : public SymmetricSpline<BSplineCurve, SymmetricBSpl
 class SymmetricBezierCurve : public SymmetricSpline<BezierCurve, SymmetricBezierCurve> {
         using SymmetricSpline<BezierCurve, SymmetricBezierCurve>::SymmetricSpline;
 };
+
+} // namespace euklid::spline

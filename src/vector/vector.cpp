@@ -188,6 +188,10 @@ double Vector2D::cross(const Vector2D& v2) const {
     return (*this)[0] * v2[1] - v2[0] * (*this)[1];
 }
 
+double Vector2D::angle() const {
+    return atan2(this->get_item(1), this->get_item(0));
+}
+
 Vector3D Vector3D::cross(const Vector3D& v2) const {
     Vector3D result;
 

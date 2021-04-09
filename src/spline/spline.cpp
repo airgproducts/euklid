@@ -1,6 +1,8 @@
 #include "spline/spline.hpp"
 
 
+namespace euklid::spline {
+
 template<typename Base, typename T>
 SplineCurve<Base, T>::SplineCurve(PolyLine2D controlpoints) : 
     controlpoints(controlpoints),
@@ -230,3 +232,5 @@ template class SplineCurve<BezierBase, BezierCurve>;
 template class SplineCurve<BSplineBase<2>, BSplineCurve>;
 template class SymmetricSpline<BSplineCurve, SymmetricBSplineCurve>;
 template class SymmetricSpline<BezierCurve, SymmetricBezierCurve>;
+
+} // namespace euklid::spline

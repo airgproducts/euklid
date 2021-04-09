@@ -83,7 +83,7 @@ T PolyLine<VectorClass, T>::get(double ik_start, double ik_end) const {
 }
 
 template<typename VectorClass, typename T>
-std::vector<std::shared_ptr<VectorClass>> PolyLine<VectorClass, T>::get_segments() {
+std::vector<std::shared_ptr<VectorClass>> PolyLine<VectorClass, T>::get_segments() const {
     std::vector<std::shared_ptr<VectorClass>> result;
     
     if (this->nodes.size() < 2) {
@@ -99,7 +99,7 @@ std::vector<std::shared_ptr<VectorClass>> PolyLine<VectorClass, T>::get_segments
 }
 
 template<typename VectorClass, typename T>
-std::vector<double> PolyLine<VectorClass, T>::get_segment_lengthes() {
+std::vector<double> PolyLine<VectorClass, T>::get_segment_lengthes() const {
     std::vector<double> result;
 
     for (auto segment: this->get_segments()) {
