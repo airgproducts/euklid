@@ -22,7 +22,7 @@ from __future__ import division
 import unittest
 import random
 
-from euklid.vector import BezierCurve
+from euklid.spline import BezierCurve
 
 
 class TestBezier(unittest.TestCase):

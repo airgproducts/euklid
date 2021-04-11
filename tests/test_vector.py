@@ -132,16 +132,16 @@ class TestVector2D(TestVector3D):
 
     def test_Cut(self):
         for thalist in self.vectors:
-            i = random.randint(1, len(thalist)-3)
-            normv = thalist.normvectors().nodes
-            dirr = normv[i].normalized()
+            i = random.randint(1, len(thalist)-3)# + random.random()
+            normv = thalist.normvectors()
+            dirr = normv.get(i).normalized()
             #dirr = vector.normalize(normv[i-i % 1])+vector.normalize(normv[i - i % 1 + 1])
-            dirr *= 0.001
+            dirr *= 0.0001
 
-            p1 = thalist.nodes[i]+dirr
-            p2 = thalist.nodes[i]-dirr
-            neu = thalist.cut(p1, p2, i - 1)
-            self.assertAlmostEqual(i, neu[1])
+            p1 = thalist.get(i)+dirr
+            p2 = thalist.get(i)-dirr
+            neu = thalist.cut(p1, p2, i)
+            self.assertAlmostEqual(i, neu[0])
 
 class TestVectorFunctions3D(unittest.TestCase):
     dim = 3

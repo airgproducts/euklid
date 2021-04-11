@@ -28,7 +28,7 @@ set(HEADER_FILES
         )
 
 
-pybind11_add_module(euklid pybind/pybind.cpp ${CPP_FILES} ${HEADER_FILES})
+pybind11_add_module(euklid bindings/py/pybind.cpp ${CPP_FILES} ${HEADER_FILES})
 
 if(OpenMP_CXX_FOUND)
     target_link_libraries(euklid PUBLIC OpenMP::OpenMP_CXX)

@@ -3,10 +3,10 @@
 #include <pybind11/stl.h>
 
 #include "version.hpp"
-#include "pybind/mesh.cpp"
-#include "pybind/vector.cpp"
-#include "pybind/spline.cpp"
-#include "pybind/plane.cpp"
+#include "bindings/py/mesh.cpp"
+#include "bindings/py/vector.cpp"
+#include "bindings/py/spline.cpp"
+#include "bindings/py/plane.cpp"
 
 
 namespace py = pybind11;
