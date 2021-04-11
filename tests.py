@@ -12,6 +12,6 @@ if __name__ == "__main__":
     test_results = unittest.TextTestRunner(verbosity=int(1)).run(tests)
 
     if not test_results.wasSuccessful():
-        sys.exit(os.EX_SOFTWARE)
+        sys.exit(10)
     
-    sys.exit(os.EX_OK)
+    sys.exit(0)
