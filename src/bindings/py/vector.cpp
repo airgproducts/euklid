@@ -172,6 +172,7 @@ py::class_<PolyLineType> PyPolyLine(py::module_ m, const char *name) {
         })
         .def("get", py::overload_cast<const double>(&PolyLineType::get, py::const_))
         .def("get", py::overload_cast<const double, const double>(&PolyLineType::get, py::const_))
+        .def("get_positions", &PolyLineType::get_positions)
         .def("get_segments", &PolyLineType::get_segments)
         .def("get_segment_lengthes", &PolyLineType::get_segment_lengthes)
         .def("get_length", &PolyLineType::get_length)
