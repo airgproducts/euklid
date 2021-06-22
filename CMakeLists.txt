@@ -35,7 +35,10 @@ if (MSVC)
 else()
     # lots of warnings and all warnings as errors
     # TODO: add -Wall ()
-    add_compile_options(-Wall -Wextra -pedantic -Werror -Wno-deprecated-enum-enum-conversion)
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+    if(LINUX)
+        add_compile_options(-Wno-deprecated-enum-enum-conversion)
+    endif()
 endif()
 
 ADD_SUBDIRECTORY("src" "euklid")
