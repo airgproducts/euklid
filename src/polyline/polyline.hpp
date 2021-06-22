@@ -21,6 +21,7 @@ template<typename VectorType, typename T>
             double get_length();
             std::vector<std::shared_ptr<VectorType>> get_segments() const;
             std::vector<double> get_segment_lengthes() const;
+            std::vector<std::shared_ptr<VectorType>> get_tangents() const;
             
             double walk(double start, double amount);
 

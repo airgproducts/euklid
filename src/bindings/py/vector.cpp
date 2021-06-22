@@ -131,6 +131,9 @@ py::class_<PolyLineType> PyPolyLine(py::module_ m, const char *name) {
             auto lst = get_vector_list<py::list, VectorClass>(t);
             return PolyLineType(lst);
         }), py::arg("nodes"))
+        .def(py::init([](PolyLineType& in){
+            return PolyLineType(in);
+        }))
         .def("__len__", &PolyLineType::numpoints)
         .def("__iter__", [](const PolyLineType& v){
             return py::make_iterator(v.nodes.begin(), v.nodes.end());
@@ -184,6 +187,7 @@ py::class_<PolyLineType> PyPolyLine(py::module_ m, const char *name) {
         .def("get_positions", &PolyLineType::get_positions)
         .def("get_segments", &PolyLineType::get_segments)
         .def("get_segment_lengthes", &PolyLineType::get_segment_lengthes)
+        .def("get_tangents", &PolyLineType::get_tangents)
         .def("get_length", &PolyLineType::get_length)
         .def("walk", &PolyLineType::walk)
         .def("resample", &PolyLineType::resample)

@@ -99,6 +99,36 @@ std::vector<std::shared_ptr<VectorClass>> PolyLine<VectorClass, T>::get_segments
 }
 
 template<typename VectorClass, typename T>
+std::vector<std::shared_ptr<VectorClass>> PolyLine<VectorClass, T>::get_tangents() const {
+    std::vector<std::shared_ptr<VectorClass>> result;
+    
+    if (this->nodes.size() < 2) {
+        return result;
+    }
+
+    result.push_back(std::make_shared<VectorClass>((*this->nodes[1] - *this->nodes[0]).normalized()));
+    
+    for (size_t i=0; i<this->nodes.size()-2; i++) {
+        VectorClass first = (*this->nodes[i+1] - *this->nodes[i]).normalized();
+        VectorClass second = (*this->nodes[i+2] - *this->nodes[i+1]).normalized();
+        VectorClass tangent = first + second;
+        
+        double length = tangent.length();
+
+        if (length <= small_d) {
+            tangent = first;
+        }
+
+        result.push_back(std::make_shared<VectorClass>(tangent));
+    }
+
+    result.push_back(std::make_shared<VectorClass>((*this->nodes[this->nodes.size()-1] - *this->nodes[this->nodes.size()-2]).normalized()));
+
+    return result;
+
+}
+
+template<typename VectorClass, typename T>
 std::vector<double> PolyLine<VectorClass, T>::get_segment_lengthes() const {
     std::vector<double> result;
 
