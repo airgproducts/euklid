@@ -34,7 +34,8 @@ if (MSVC)
     # add_compile_options(/W4 /WX)
 else()
     # lots of warnings and all warnings as errors
-    add_compile_options(-Wall -Wextra -pedantic -Werror)
+    # TODO: add -Wall ()
+    add_compile_options(-Wall -Wextra -pedantic -Werror -Wno-deprecated-enum-enum-conversion)
 endif()
 
 ADD_SUBDIRECTORY("src" "euklid")

@@ -79,6 +79,14 @@ py::class_<VectorType, std::shared_ptr<VectorType>> PyVector(py::module_ m, cons
                     }
                     return vec;
                 }))
+            .def(py::init([](VectorType& v){
+                auto vec = VectorType();
+
+                for (int i=0; i<VectorType::dimension; i++) {
+                    vec.set_item(i, v.get_item(i));
+                }
+                return vec;
+            }))
             .def("__getitem__", [](const VectorType &v, size_t i) {
                     return v.get_item(i);
             })
