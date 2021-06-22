@@ -36,7 +36,7 @@ else()
     # lots of warnings and all warnings as errors
     # TODO: add -Wall ()
     add_compile_options(-Wall -Wextra -pedantic -Werror)
-    if(LINUX)
+    if(UNIX AND NOT APPLE)
         add_compile_options(-Wno-deprecated-enum-enum-conversion)
     endif()
 endif()
