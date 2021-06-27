@@ -11,15 +11,16 @@ class Plane {
 
         Vector2D project(const Vector3D&) const;
         PolyLine2D project(const PolyLine3D&) const;
-
-    private:
-        void setup();
+    
         Vector3D x_vector;
         Vector3D y_vector;
         Vector3D normvector;
         Vector3D p0;
 
         Transformation transformation;
+
+    private:
+        void setup();
 
 };
 

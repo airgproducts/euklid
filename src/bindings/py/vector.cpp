@@ -117,6 +117,7 @@ py::class_<VectorType, std::shared_ptr<VectorType>> PyVector(py::module_ m, cons
             .def(py::self - py::self)
             .def(py::self * py::self)
             .def(py::self * double())
+            .def(py::self / double())
             .def("dot", &VectorType::dot)
             .def("length", &VectorType::length)
             .def("copy", &VectorType::copy)

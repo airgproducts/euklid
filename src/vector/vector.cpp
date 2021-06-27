@@ -121,6 +121,11 @@ T Vector<dimensions, T>::operator* (const double& factor) const {
 }
 
 template<size_t dimensions, typename T>
+T Vector<dimensions, T>::operator/ (const double& factor) const {
+    return *this * (1/factor);
+}
+
+template<size_t dimensions, typename T>
 double Vector<dimensions, T>::distance(const T& v2) const {
     return ((*this) - v2).length();
 }

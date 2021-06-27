@@ -17,6 +17,10 @@ namespace euklid::plane {
         py::class_<Plane>(m, "Plane")
             .def(py::init<Transformation>())
             .def(py::init<Vector3D, Vector3D, Vector3D>())
+            .def_readonly("x_vector", &Plane::x_vector)
+            .def_readonly("y_vector", &Plane::y_vector)
+            .def_readonly("normvector", &Plane::normvector)
+            .def_readonly("p0", &Plane::p0)
             .def("project", py::overload_cast<const Vector3D&>(&Plane::project, py::const_))
             .def("project", py::overload_cast<const PolyLine3D&>(&Plane::project, py::const_));
 

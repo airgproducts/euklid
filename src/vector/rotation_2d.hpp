@@ -1,7 +1,9 @@
 #pragma once
 
-#include "vector/vector.hpp"
 #include <math.h>
+
+#include "vector/vector.hpp"
+#include "polyline/polyline_2d.hpp"
 
 class Rotation2D {
     public:
@@ -17,7 +19,7 @@ class Rotation2D {
             this->entries[1][1] = cos(radians);
         }
 
-        Vector2D apply(const Vector2D& vector) {
+        Vector2D apply(const Vector2D& vector) const {
             Vector2D result;
 
             for (int i=0; i<2; i++) {
@@ -31,7 +33,6 @@ class Rotation2D {
 
             return result;
         }
-
     
     private:
         double entries[2][2];

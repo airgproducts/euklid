@@ -30,6 +30,7 @@ class Vector {
         T operator +(const T& v2) const;
         T operator *(const T& v2) const;
         T operator *(const double&) const;
+        T operator /(const double&) const;
 
 
         double dot(const T& v2) const;
