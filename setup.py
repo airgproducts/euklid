@@ -12,7 +12,16 @@ from distutils.version import LooseVersion
 from distutils.core import setup
 import setuptools
 from setuptools.command.build_ext import build_ext
+from setuptools.command.install_lib import install_lib
 from setuptools.command.install import install
+
+stub_index = """
+from . import vector
+from . import spline
+from . import plane
+from . import mesh
+
+"""
 
 
 DEBUG = False
@@ -24,9 +33,16 @@ class CMakeExtension(setuptools.Extension):
     def __init__(self, name, sourcedir=''):
         super().__init__(name, [])
         self.sourcedir = os.path.abspath(sourcedir)
+        #self.include_dirs = ['euklid-stubs']
+
+class InstallStubs(install_lib):
+    def run(self):
+        super().run()
+
 
 class CMakeBuild(build_ext):
     def run(self):
+        print("extensions: ", self.extensions)
         try:
             out = subprocess.check_output(['cmake', '--version'])
         except OSError:
@@ -71,7 +87,17 @@ class CMakeBuild(build_ext):
         logging.info(f"Build dir: {self.build_temp}")
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
-        subprocess.check_call(['stubgen', '-p', 'euklid', '-o', 'euklid-stubs'])
+
+        stubgen_path = self.build_lib
+        if not os.path.exists(self.build_lib):
+            stubgen_path = self.build_temp
+
+        subprocess.check_call(['stubgen', '-p', 'euklid', '-o', '.'], cwd=stubgen_path)
+        subprocess.check_call(['mv', 'euklid', 'euklid-stubs'], cwd=stubgen_path)
+
+        with open(os.path.join(stubgen_path, "euklid-stubs", "__init__.pyi"), "w") as outfile:
+            outfile.write(stub_index)
+        
 
 version = "-"
 with open("src/version.hpp") as version_file:
@@ -97,12 +123,12 @@ setup(
     version=version,
     description="common vector operations [2D/3D]",
     ext_modules=[CMakeExtension('.')],
-    cmdclass={"build_ext": CMakeBuild},
+    cmdclass={"build_ext": CMakeBuild, "install_lib": InstallStubs},
     license='MIT',
     long_description=long_description,
     install_requires=['mypy'],
-    packages=['euklid-stubs'],
-    package_data={'euklid-stubs': find_stub_files('euklid-stubs')},
+    #packages=['euklid-stubs'],
+    #package_data={'euklid-stubs': find_stub_files('euklid-stubs')},
     author='airgproducts',
     url='http://github.com/airgproducts/euklid',
     test_suite="tests.test_suite",
