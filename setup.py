@@ -71,6 +71,7 @@ class CMakeBuild(build_ext):
         logging.info(f"Build dir: {self.build_temp}")
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
+        subprocess.check_call(['stubgen', '-p', 'euklid', '-o', 'euklid-stubs'])
 
 version = "-"
 with open("src/version.hpp") as version_file:
@@ -80,6 +81,17 @@ with open("src/version.hpp") as version_file:
 with open("README.md") as readme_file:
     long_description = readme_file.read()
 
+def find_stub_files(name: str):
+    result = []
+    for root, dirs, files in os.walk(name):
+        for file in files:
+            if file.endswith('.pyi'):
+                if os.path.sep in root:
+                    sub_root = root.split(os.path.sep, 1)[-1]
+                    file = os.path.join(sub_root, file)
+                result.append(file)
+    return result
+
 setup(
     name='euklid',
     version=version,
@@ -88,7 +100,9 @@ setup(
     cmdclass={"build_ext": CMakeBuild},
     license='MIT',
     long_description=long_description,
-    install_requires=[],
+    install_requires=['mypy'],
+    packages=['euklid-stubs'],
+    package_data={'euklid-stubs': find_stub_files('euklid-stubs')},
     author='airgproducts',
     url='http://github.com/airgproducts/euklid',
     test_suite="tests.test_suite",
