@@ -93,7 +93,7 @@ class CMakeBuild(build_ext):
             stubgen_path = self.build_temp
         
         import mypy.stubgen
-        opts = mypy.stubgen.parse_options({})
+        opts = mypy.stubgen.parse_options([])
         opts.packages.append("euklid")
         opts.output_dir = stubgen_path
 
