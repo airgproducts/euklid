@@ -127,6 +127,7 @@ setup(
     license='MIT',
     long_description=long_description,
     install_requires=['mypy'],
+    requires=["mypy"],
     #packages=['euklid-stubs'],
     #package_data={'euklid-stubs': find_stub_files('euklid-stubs')},
     author='airgproducts',
