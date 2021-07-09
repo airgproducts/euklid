@@ -92,7 +92,7 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_lib):
             stubgen_path = self.build_temp
 
-        subprocess.check_call(['python', '-m', 'stubgen', '-p', 'euklid', '-o', '.'], cwd=stubgen_path)
+        subprocess.check_call(['python', '-m', 'mypy.stubgen', '-p', 'euklid', '-o', '.'], cwd=stubgen_path)
         subprocess.check_call(['mv', 'euklid', 'euklid-stubs'], cwd=stubgen_path)
 
         with open(os.path.join(stubgen_path, "euklid-stubs", "__init__.pyi"), "w") as outfile:
