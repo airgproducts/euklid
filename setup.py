@@ -84,7 +84,7 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_lib):
             stubgen_path = self.build_temp
 
-        stubgen_exec = subprocess.check_call([sys.executable, 'stubs.py', stubgen_path])
+        subprocess.check_call([sys.executable, 'stubs.py', stubgen_path])
 
         
 
