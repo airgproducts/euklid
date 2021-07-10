@@ -29,7 +29,7 @@ jobs:
         run: |
           pip install wheel
           pip install mypy
-          pip install .
+          pip install . -v
       - name: test
         run: |
           python tests.py
