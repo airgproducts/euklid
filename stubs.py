@@ -16,7 +16,7 @@ stubgen_path = "."
 if len(sys.argv) > 1:
     stubgen_path = sys.argv[1]
 
-opts = mypy.stubgen.parse_options({})
+opts = mypy.stubgen.parse_options([])
 opts.packages.append("euklid")
 opts.output_dir = stubgen_path
 
