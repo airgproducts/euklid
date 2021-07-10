@@ -1,6 +1,8 @@
 import sys
 import os
 import shutil
+import multiprocessing
+
 import mypy.stubgen
 
 
@@ -12,21 +14,24 @@ from . import mesh
 
 """
 
-stubgen_path = "."
-if len(sys.argv) > 1:
-    stubgen_path = sys.argv[1]
+if __name__ == '__main__':
+    multiprocessing.freeze_support()
 
-sys.path.append(stubgen_path)
+    stubgen_path = "."
+    if len(sys.argv) > 1:
+        stubgen_path = sys.argv[1]
 
-opts = mypy.stubgen.parse_options([])
-opts.packages.append("euklid")
-opts.output_dir = stubgen_path
+    sys.path.append(stubgen_path)
+
+    opts = mypy.stubgen.parse_options([])
+    opts.packages.append("euklid")
+    opts.output_dir = stubgen_path
 
 
-mypy.stubgen.generate_stubs(opts)
+    mypy.stubgen.generate_stubs(opts)
 
 
-with open(os.path.join(stubgen_path, "euklid", "__init__.pyi"), "w") as outfile:
-    outfile.write(stub_index)
+    with open(os.path.join(stubgen_path, "euklid", "__init__.pyi"), "w") as outfile:
+        outfile.write(stub_index)
 
-shutil.move(os.path.join(stubgen_path, "euklid"), os.path.join(stubgen_path, "euklid-stubs"))
+    shutil.move(os.path.join(stubgen_path, "euklid"), os.path.join(stubgen_path, "euklid-stubs"))
