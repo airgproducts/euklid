@@ -28,6 +28,7 @@ jobs:
       - name: install requirements
         run: |
           pip install wheel
+          pip install mypy
           pip install .
       - name: test
         run: |
