@@ -84,7 +84,11 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_lib):
             stubgen_path = self.build_temp
 
-        subprocess.check_call([sys.executable, 'stubs.py', stubgen_path])
+        try:
+            subprocess.check_call([sys.executable, 'stubs.py', stubgen_path])
+        except subprocess.CalledProcessError:
+            print("no mypy found")
+
 
         
 
@@ -96,16 +100,6 @@ with open("src/version.hpp") as version_file:
 with open("README.md") as readme_file:
     long_description = readme_file.read()
 
-def find_stub_files(name: str):
-    result = []
-    for root, dirs, files in os.walk(name):
-        for file in files:
-            if file.endswith('.pyi'):
-                if os.path.sep in root:
-                    sub_root = root.split(os.path.sep, 1)[-1]
-                    file = os.path.join(sub_root, file)
-                result.append(file)
-    return result
 
 setup(
     name='euklid',
@@ -115,10 +109,6 @@ setup(
     cmdclass={"build_ext": CMakeBuild, "install_lib": InstallStubs},
     license='MIT',
     long_description=long_description,
-    install_requires=['mypy'],
-    requires=["mypy"],
-    #packages=['euklid-stubs'],
-    #package_data={'euklid-stubs': find_stub_files('euklid-stubs')},
     author='airgproducts',
     url='http://github.com/airgproducts/euklid',
     test_suite="tests.test_suite",
