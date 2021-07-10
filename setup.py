@@ -15,14 +15,6 @@ from setuptools.command.build_ext import build_ext
 from setuptools.command.install_lib import install_lib
 from setuptools.command.install import install
 
-stub_index = """
-from . import vector
-from . import spline
-from . import plane
-from . import mesh
-
-"""
-
 
 DEBUG = False
 if "--debug" in sys.argv:
@@ -92,11 +84,8 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_lib):
             stubgen_path = self.build_temp
 
-        subprocess.check_call(['stubgen', '-p', 'euklid', '-o', '.'], cwd=stubgen_path)
-        subprocess.check_call(['mv', 'euklid', 'euklid-stubs'], cwd=stubgen_path)
+        stubgen_exec = subprocess.check_call([sys.executable, 'stubs.py', stubgen_path])
 
-        with open(os.path.join(stubgen_path, "euklid-stubs", "__init__.pyi"), "w") as outfile:
-            outfile.write(stub_index)
         
 
 version = "-"
