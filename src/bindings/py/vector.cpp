@@ -259,6 +259,11 @@ namespace euklid::vector {
             .def("normvectors", &PolyLine2D::normvectors)
             .def("offset", &PolyLine2D::offset)
             .def("mirror", &PolyLine2D::mirror)
+            .def("mirror", [](const PolyLine2D& line){
+                auto v1 = Vector2D(0, 0);
+                auto v2 = Vector2D(0, 1);
+                return line.mirror(v1, v2);
+            })
             .def("cut", py::overload_cast<const Vector2D&, const Vector2D&>(&PolyLine2D::cut, py::const_))
             .def("cut", py::overload_cast<const Vector2D&, const Vector2D&, const double>(&PolyLine2D::cut, py::const_))
             .def("cut", py::overload_cast<const PolyLine2D&>(&PolyLine2D::cut, py::const_))
