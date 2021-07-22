@@ -8,7 +8,7 @@ set (CMAKE_CXX_STANDARD 20)
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
-if(EXISTS ${PROJECT_SOURCE_DIR}/lib/pybind11)
+if(EXISTS ${PROJECT_SOURCE_DIR}/lib/pybind11/CMakeLists.txt)
     add_subdirectory(${PROJECT_SOURCE_DIR}/lib/pybind11)
 else()
     find_package(pybind11 REQUIRED)
@@ -17,7 +17,7 @@ set(PYBIND11_CPP_STANDARD -std=c++14)
 
 
 message(${PROJECT_SOURCE_DIR})
-if(EXISTS ${PROJECT_SOURCE_DIR}/lib/eigen)
+if(EXISTS ${PROJECT_SOURCE_DIR}/lib/eigen/CMakeLists.txt)
     add_subdirectory(${PROJECT_SOURCE_DIR}/lib/eigen)
 else()
     find_package (Eigen3 3.3 REQUIRED NO_MODULE)
