@@ -28,16 +28,20 @@ find_package(OpenMP)
 
 # OPTIONS
 OPTION(BUILD_PYTHON_BINDINGS "create python bindings" ON)
+OPTION(WALL "Treat all warnings as errors" ON)
 
-if (MSVC)
-    # warning level 4 and all warnings as errors
-    # add_compile_options(/W4 /WX)
-else()
-    # lots of warnings and all warnings as errors
-    # TODO: add -Wall ()
-    add_compile_options(-Wall -Wextra -pedantic -Werror)
-    if(UNIX AND NOT APPLE)
-        add_compile_options(-Wno-deprecated-enum-enum-conversion)
+if (WALL)
+    message("Treating all warnings as errors")
+    if (MSVC)
+        # warning level 4 and all warnings as errors
+        # add_compile_options(/W4 /WX)
+    else()
+        # lots of warnings and all warnings as errors
+        # TODO: add -Wall ()
+        add_compile_options(-Wall -Wextra -pedantic -Werror)
+        if(UNIX AND NOT APPLE)
+            add_compile_options(-Wno-deprecated-enum-enum-conversion)
+        endif()
     endif()
 endif()
 

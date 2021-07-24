@@ -21,6 +21,13 @@ if "--debug" in sys.argv:
     DEBUG = True
     sys.argv.remove("--debug")
 
+CONDA_BUILD = False
+if "--conda" in sys.argv:
+    CONDA_BUILD = True
+    sys.argv.remove("--conda")
+
+
+
 class CMakeExtension(setuptools.Extension):
     def __init__(self, name, sourcedir=''):
         super().__init__(name, [])
@@ -61,6 +68,9 @@ class CMakeBuild(build_ext):
 
         cmake_args.append(f"-DCMAKE_BUILD_TYPE={cfg}")
         build_args = ['--config', cfg]
+
+        if CONDA_BUILD:
+            cmake_args += ["-DCMAKE_SKIP_RPATH=on", "-DWALL=off"]
 
         if platform.system() == "Windows":
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(cfg.upper(), extdir)]
