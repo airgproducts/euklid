@@ -5,7 +5,7 @@ PROJECT(euklid)
 # OPTIONS
 OPTION(BUILD_PYTHON_BINDINGS "create python bindings" ON)
 OPTION(WALL "Treat all warnings as errors" ON)
-OPTION(USE_SUBMODULE_LIBS ON)
+OPTION(USE_SUBMODULE_LIBS "Use libs from submodules" ON)
 
 set(CMAKE_SOURCE_DIR ${CMAKE_SOURCE_DIR}/src)
 
@@ -13,7 +13,7 @@ set (CMAKE_CXX_STANDARD 20)
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 SET(CMAKE_CXX_FLAGS_RELEASE "-O3")
 
-if(USE_SUBMODULE_LIBS AND EXISTS ${PROJECT_SOURCE_DIR}/lib/pybind11/CMakeLists.txt)
+if(${USE_SUBMODULE_LIBS} AND EXISTS ${PROJECT_SOURCE_DIR}/lib/pybind11/CMakeLists.txt)
     add_subdirectory(${PROJECT_SOURCE_DIR}/lib/pybind11)
 else()
     find_package(pybind11 REQUIRED)
@@ -21,8 +21,7 @@ endif()
 set(PYBIND11_CPP_STANDARD -std=c++14)
 
 
-message(${PROJECT_SOURCE_DIR})
-if(USE_SUBMODULE_LIBS AND EXISTS ${PROJECT_SOURCE_DIR}/lib/eigen/CMakeLists.txt)
+if(${USE_SUBMODULE_LIBS} AND EXISTS ${PROJECT_SOURCE_DIR}/lib/eigen/CMakeLists.txt)
     add_subdirectory(${PROJECT_SOURCE_DIR}/lib/eigen)
 else()
     find_package (Eigen3 3.3 REQUIRED NO_MODULE)
