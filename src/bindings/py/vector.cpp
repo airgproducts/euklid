@@ -255,6 +255,7 @@ namespace euklid::vector {
         py::implicitly_convertible<py::list,  PolyLine3D>();
         
         PyPolyLine<PolyLine2D, Vector2D>(m, "PolyLine2D")
+            .def("get_area", &PolyLine2D::get_area)
             .def("rotate", &PolyLine2D::rotate)
             .def("normvectors", &PolyLine2D::normvectors)
             .def("offset", &PolyLine2D::offset)

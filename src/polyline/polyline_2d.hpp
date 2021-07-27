@@ -18,6 +18,8 @@ class PolyLine2D : public PolyLine<Vector2D, PolyLine2D> {
         std::vector<std::pair<double, double>> cut(const PolyLine2D& l2) const;
         PolyLine2D fix_errors() const;
 
+        double get_area() const;
+
         PolyLine2D mirror(Vector2D& p1, Vector2D& p2) const;
         PolyLine2D rotate(double, Vector2D&);
 

@@ -186,6 +186,24 @@ PolyLine2D PolyLine2D::fix_errors() const {
 }
 
 
+double PolyLine2D::get_area() const {
+    double area;
+    u_int j;
+
+    for (u_int i=0; i<this->nodes.size(); i++) {
+        j = i+1;
+        if (j >= this->nodes.size()) {
+            j = 0;
+        }
+
+        area += this->nodes[i]->get_item(0) * this->nodes[j]->get_item(1);
+        area -= this->nodes[i]->get_item(1) * this->nodes[j]->get_item(0);
+    }
+
+    return area;
+}
+
+
 PolyLine2D PolyLine2D::mirror(Vector2D& p1, Vector2D& p2) const {
     auto diff = p1 - p2;
     auto normvector = Vector2D(-diff[1], diff[0]);
