@@ -187,7 +187,7 @@ PolyLine2D PolyLine2D::fix_errors() const {
 
 
 double PolyLine2D::get_area() const {
-    double area;
+    double area = 0;
     u_int j;
 
     for (u_int i=0; i<this->nodes.size(); i++) {
