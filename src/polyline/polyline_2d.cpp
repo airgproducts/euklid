@@ -133,7 +133,7 @@ PolyLine2D PolyLine2D::fix_errors() const {
         return this->copy();
     }
     for (size_t i=0; i<this->nodes.size()-3; i++) {
-        int new_list_start = i+2;
+        size_t new_list_start = i+2;
         auto nodes2 = std::vector<std::shared_ptr<Vector2D>>(this->nodes.begin() + new_list_start, this->nodes.end());
         PolyLine2D line2 = PolyLine2D(nodes2);
 
@@ -188,9 +188,9 @@ PolyLine2D PolyLine2D::fix_errors() const {
 
 double PolyLine2D::get_area() const {
     double area = 0;
-    u_int j;
+    unsigned int j;
 
-    for (u_int i=0; i<this->nodes.size(); i++) {
+    for (unsigned int i=0; i<this->nodes.size(); i++) {
         j = i+1;
         if (j >= this->nodes.size()) {
             j = 0;
