@@ -81,8 +81,10 @@ class CMakeBuild(build_ext):
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(cfg.upper(), extdir)]
             #if sys.maxsize > 2**32:
             #    cmake_args += ['-A', 'x64']
-            build_args += ['--', '/MP']
-        else:
+            if not CONDA_BUILD:
+                build_args += ['--', f'-m:{num_cores}']
+        
+        if CONDA_BUILD or platform.system() != "Windows":
             cmake_args += ['-DCMAKE_BUILD_TYPE=' + cfg]
             build_args += ['--', f'-j{num_cores}']
 
