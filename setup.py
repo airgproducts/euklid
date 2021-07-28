@@ -94,8 +94,8 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
         logging.info(f"Build dir: {self.build_temp}")
-        logging.info(f"Cmake args: {' '.join(cmake_args)}}")
-        logging.info(f"Build args: {' '.join(build_args)}}")
+        logging.info("Cmake args: " + " ".join(cmake_args))
+        logging.info("Build args: " + " ".join(build_args))
         subprocess.check_call(['cmake', ext.sourcedir] + cmake_args, cwd=self.build_temp, env=env)
         subprocess.check_call(['cmake', '--build', '.'] + build_args, cwd=self.build_temp)
 
