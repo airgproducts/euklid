@@ -70,7 +70,12 @@ class CMakeBuild(build_ext):
         build_args = ['--config', cfg]
 
         if CONDA_BUILD:
-            cmake_args += ["-DCMAKE_SKIP_RPATH=on", "-DWALL=off", "-DUSE_SUBMODULE_LIBS=off"]
+            cmake_args += [
+                "-DWALL=off",
+                "-DUSE_SUBMODULE_LIBS=off",
+                "-DBUILD_SHARED_LIBS=ON"
+                "-G 'Ninja'"
+                ]
 
         if platform.system() == "Windows":
             cmake_args += ['-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(cfg.upper(), extdir)]
