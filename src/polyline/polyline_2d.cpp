@@ -127,6 +127,21 @@ std::vector<std::pair<double, double>> PolyLine2D::cut(const PolyLine2D& l2) con
     return result;
 }
 
+std::pair<double, double> PolyLine2D::cut(const PolyLine2D& other, double nearest_ik) const { 
+    using cut = std::pair<double, double>;
+    auto cuts = this->cut(other);
+    
+    std::sort(cuts.begin(), cuts.end(), [nearest_ik](cut& a, cut& b) {
+        return std::abs(a.first-nearest_ik) < std::abs(b.first-nearest_ik);
+    });
+
+    if (cuts.size() == 0) {
+        throw std::runtime_error("No cut found!");
+    }
+
+    return cuts[0];
+}
+
 
 PolyLine2D PolyLine2D::fix_errors() const {
     if (this->nodes.size() <= 4) {
