@@ -3,7 +3,7 @@
 //#include "common.cpp"
 
 
-PolyLine2D PolyLine2D::normvectors() {
+PolyLine2D PolyLine2D::normvectors() const {
     auto segments = this->get_segments();
     std::vector<std::shared_ptr<Vector2D>> segment_normals;
     std::vector<std::shared_ptr<Vector2D>> normvectors;
@@ -42,7 +42,7 @@ PolyLine2D PolyLine2D::normvectors() {
     return PolyLine2D(normvectors);
 }
 
-PolyLine2D PolyLine2D::offset(double amount) {
+PolyLine2D PolyLine2D::offset(double amount) const {
     auto normvectors = this->normvectors().nodes;
     std::vector<std::shared_ptr<Vector2D>> nodes;
 
@@ -234,7 +234,7 @@ PolyLine2D PolyLine2D::mirror(Vector2D& p1, Vector2D& p2) const {
 }
 
 
-PolyLine2D PolyLine2D::rotate(double radians, Vector2D& origin) {
+PolyLine2D PolyLine2D::rotate(double radians, Vector2D& origin) const {
     std::vector<std::shared_ptr<Vector2D>> new_nodes;
     auto rotation = Rotation2D(radians);
 

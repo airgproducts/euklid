@@ -28,14 +28,18 @@ template<typename VectorType, typename T>
             std::vector<std::shared_ptr<VectorType>> nodes;
 
             T resample(const int num_points);
-            T reverse();
+            T reverse() const;
             T copy() const;
-            T scale(const VectorType&);
-            T scale(const double);
-            T mix(T&, const double);
+            T scale(const VectorType&) const;
+            T scale(const double) const;
+            T mix(T&, const double) const;
             T move(const VectorType&) const;
+            T add(const T&) const;
+            T sub(const T&) const;
+            T scale_nodes(const std::vector<double>&) const;
 
             T operator+ (const T&) const;
+            T operator- (const T&) const;
         
         private:
             std::string hash;

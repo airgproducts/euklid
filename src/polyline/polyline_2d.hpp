@@ -10,8 +10,8 @@ class PolyLine2D : public PolyLine<Vector2D, PolyLine2D> {
         using PolyLine<Vector2D, PolyLine2D>::PolyLine;
         
         //PolyLine2D resample(int num_points);
-        PolyLine2D normvectors();
-        PolyLine2D offset(double amount);
+        PolyLine2D normvectors() const;
+        PolyLine2D offset(double amount) const;
 
         std::vector<std::pair<double, double>> cut(const Vector2D& p1, const Vector2D& p2) const;
         std::pair<double, double> cut(const Vector2D& p1, const Vector2D& p2, double nearest_ik) const;
@@ -22,7 +22,7 @@ class PolyLine2D : public PolyLine<Vector2D, PolyLine2D> {
         double get_area() const;
 
         PolyLine2D mirror(Vector2D& p1, Vector2D& p2) const;
-        PolyLine2D rotate(double, Vector2D&);
+        PolyLine2D rotate(double, Vector2D&) const;
 
         PolyLine3D to_3d() const;
 };

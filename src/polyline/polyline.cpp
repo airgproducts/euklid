@@ -228,7 +228,7 @@ T PolyLine<VectorClass, T>::copy() const {
 
 
 template<typename VectorClass, typename T>
-T PolyLine<VectorClass, T>::scale(const VectorClass& scale) {
+T PolyLine<VectorClass, T>::scale(const VectorClass& scale) const {
     std::vector<std::shared_ptr<VectorClass>> nodes_new;
 
     for (auto node: this->nodes) {
@@ -240,7 +240,7 @@ T PolyLine<VectorClass, T>::scale(const VectorClass& scale) {
 
 
 template<typename VectorClass, typename T>
-T PolyLine<VectorClass, T>::scale(const double scale) {
+T PolyLine<VectorClass, T>::scale(const double scale) const {
     auto scale_vector = VectorClass();
     for (int i=0; i<VectorClass::dimension; i++) {
         scale_vector.set_item(i, scale);
@@ -251,7 +251,7 @@ T PolyLine<VectorClass, T>::scale(const double scale) {
 
 
 template<typename VectorClass, typename T>
-T PolyLine<VectorClass, T>::mix(T& other, const double amount) {
+T PolyLine<VectorClass, T>::mix(T& other, const double amount) const {
     if (other.nodes.size() != this->nodes.size()){
         throw "PolyLine sizes don't match!";
     }
@@ -267,6 +267,45 @@ T PolyLine<VectorClass, T>::mix(T& other, const double amount) {
     }
 
     return T(nodes_new);
+}
+
+
+template<typename VectorClass, typename T>
+T PolyLine<VectorClass, T>::add(const T& other) const {
+    std::vector<std::shared_ptr<VectorClass>> new_nodes;
+
+    if (this->nodes.size() != other.nodes.size()){
+        throw std::runtime_error("PolyLine sizes don't match!");
+    }
+
+    for (unsigned int i=0; i<this->nodes.size(); i++) {
+        auto node = *this->nodes[i] + *other.nodes[i];
+        new_nodes.push_back(std::make_shared<VectorClass>(node));
+    }
+
+    return T(new_nodes);
+}
+
+
+template<typename VectorClass, typename T>
+T PolyLine<VectorClass, T>::sub(const T& other) const {
+    return this->add(other.scale(-1));
+}
+
+template<typename VectorClass, typename T>
+T PolyLine<VectorClass, T>::scale_nodes(const std::vector<double>& other) const {
+    std::vector<std::shared_ptr<VectorClass>> new_nodes;
+
+    if (this->nodes.size() != other.size()){
+        throw std::runtime_error("PolyLine sizes don't match!");
+    }
+
+    for (unsigned int i=0; i<this->nodes.size(); i++) {
+        auto node = *this->nodes[i] * other[i];
+        new_nodes.push_back(std::make_shared<VectorClass>(node));
+    }
+
+    return T(new_nodes);
 }
 
 
@@ -298,7 +337,7 @@ T PolyLine<VectorClass, T>::move (const VectorClass& offset) const {
 
 
 template<typename VectorClass, typename T>
-T PolyLine<VectorClass, T>::reverse() {
+T PolyLine<VectorClass, T>::reverse() const {
     return this->get(this->nodes.size()-1, 0);
 }
 
