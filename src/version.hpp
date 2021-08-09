@@ -1,5 +1,5 @@
 #pragma once
 
 namespace euklid {
-    const char* version = "0.1.10";
+    const char* version = "0.1.11";
 }
