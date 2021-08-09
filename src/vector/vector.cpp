@@ -201,7 +201,7 @@ Vector3D Vector3D::cross(const Vector3D& v2) const {
     Vector3D result;
 
     result.set_item(0,  ( (*this)[1] * v2[2] - (*this)[2] * v2[1] ));
-    result.set_item(1, -( (*this)[0] * v2[2] + (*this)[2] * v2[0] ));
+    result.set_item(1, -( (*this)[0] * v2[2] - (*this)[2] * v2[0] ));
     result.set_item(2,  ( (*this)[0] * v2[1] - (*this)[1] * v2[0] ));
 
     return result;
