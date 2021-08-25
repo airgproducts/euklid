@@ -2,6 +2,8 @@
 #include <pybind11/stl.h>
 #include <pybind11/operators.h>
 
+#include "spline/basis.hpp"
+#include "spline/spline.hpp"
 #include "plane/plane.hpp"
 
 namespace py = pybind11;
@@ -38,14 +40,26 @@ namespace euklid::spline {
                 .def("get_sequence", &SplineClass::get_sequence, py::arg("num"));
     }
 
+    template<size_t degree>
+    py::class_<BSplineCurve<degree>> PyBSpline(py::module m, const char *name) {
+        return PySpline<BSplineCurve<degree>>(m, name)
+            .def("get_derivate", &BSplineCurve<degree>::get_derivate)
+            .def("get_curvature", &BSplineCurve<degree>::get_curvature, py::arg("num") = 100);
+
+    };
+
     void REGISTER(pybind11::module module) {
         pybind11::module m = module.def_submodule("spline");
 
-
-
         PySpline<BezierCurve>(m, "BezierCurve");
-        PySpline<BSplineCurve>(m, "BSplineCurve");
-        PySpline<SymmetricBSplineCurve>(m, "SymmetricBSplineCurve");
+
+        PyBSpline<1>(m, "LinSplineCurve");
+        PyBSpline<2>(m, "BSplineCurve");
+        PyBSpline<3>(m, "CubicBSplineCurve");
+        PyBSpline<4>(m, "QuadBSplineCurve");
+            
+        PySpline<SymmetricBSplineCurve<2>>(m, "SymmetricBSplineCurve")
+            .def("get_curvature", &SymmetricBSplineCurve<2>::get_curvature);
         PySpline<SymmetricBezierCurve>(m, "SymmetricBezierCurve");
 
     }

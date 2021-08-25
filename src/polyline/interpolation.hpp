@@ -1,3 +1,5 @@
+#pragma once
+
 #include "polyline/polyline_2d.hpp"
 
 

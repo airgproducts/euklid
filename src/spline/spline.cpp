@@ -135,6 +135,19 @@ Vector2D SymmetricSpline<SplineClass, T>::get(double x) {
     return this->spline_curve.get(0.5+x/2);
 }
 
+template<size_t degree>
+Interpolation SymmetricBSplineCurve<degree>::get_curvature(size_t n) {
+    this->apply();
+    //return this->spline_curve.get(x);
+    auto curvature = this->spline_curve.get_curvature(2*n-1);
+    curvature.nodes.erase(curvature.nodes.begin(), curvature.nodes.begin()+n-1);
+    
+    for (auto node : curvature.nodes) {
+        node->set_item(0, (node->get_item(0)-0.5)*2);
+    }
+    return curvature;
+}
+
 
 template<typename SplineClass, typename T>
 PolyLine2D SymmetricSpline<SplineClass, T>::get_sequence(size_t segments) {
@@ -228,9 +241,57 @@ void SymmetricSpline<SplineClass, T>::set_numpoints(size_t numpoints) {
 }
 
 
+template<size_t degree>
+Interpolation BSplineCurve<degree>::get_curvature(size_t n) const {
+    auto d_1 = this->get_derivate();
+    auto d_2 = d_1.get_derivate();
+
+    Interpolation result;
+
+    for (size_t i = 0; i < n; i++) {
+        float t = (float) i / (n-1);
+        auto v = d_1.get(t);
+        float kappa = d_2.get(t).cross(v) * (1/std::pow(v.length(), 3));
+        result.nodes.push_back(std::make_shared<Vector2D>(t, kappa));
+
+    }
+
+    return result;
+
+}
+
+template<size_t degree>
+std::conditional<(degree>1), BSplineCurve<degree-1>, BSplineCurve<1>>::type BSplineCurve<degree>::get_derivate() const {
+    using T = std::conditional<(degree>1), BSplineCurve<degree-1>, BSplineCurve<1>>::type;
+    auto controlpoints = this->controlpoints.get_segments();
+
+    if (controlpoints.size() < 2) {
+        controlpoints.push_back(std::make_shared<Vector2D>(controlpoints[0]->copy()));
+    }
+
+    return T(controlpoints);
+}
+
+/*
+template<>
+BSplineCurve<0> BSplineCurve<1>::get_derivate() const {
+    throw std::runtime_error("Can't get derivative");
+};*/
+
+
 template class SplineCurve<BezierBase, BezierCurve>;
-template class SplineCurve<BSplineBase<2>, BSplineCurve>;
-template class SymmetricSpline<BSplineCurve, SymmetricBSplineCurve>;
+template class BSplineCurve<1>;
+template class BSplineCurve<2>;
+template class BSplineCurve<3>;
+template class BSplineCurve<4>;
+template class SplineCurve<BSplineBase<1>, BSplineCurve<1>>;
+template class SplineCurve<BSplineBase<2>, BSplineCurve<2>>;
+template class SplineCurve<BSplineBase<3>, BSplineCurve<3>>;
+template class SplineCurve<BSplineBase<4>, BSplineCurve<4>>;
+template class SymmetricBSplineCurve<2>;
+template class SymmetricBSplineCurve<3>;
+template class SymmetricSpline<BSplineCurve<2>, SymmetricBSplineCurve<2>>;
+template class SymmetricSpline<BSplineCurve<3>, SymmetricBSplineCurve<3>>;
 template class SymmetricSpline<BezierCurve, SymmetricBezierCurve>;
 
 } // namespace euklid::spline

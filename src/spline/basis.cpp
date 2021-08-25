@@ -125,6 +125,9 @@ size_t BSplineBase<degree>::dimension() const {
 }
 
 
+template class BSplineBase<1>;
 template class BSplineBase<2>;
+template class BSplineBase<3>;
+template class BSplineBase<4>;
 
 } // namespace euklid::spline

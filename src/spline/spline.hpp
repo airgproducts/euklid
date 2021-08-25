@@ -4,6 +4,7 @@
 #include <Eigen/Dense>
 
 #include "vector/vector.hpp"
+#include "polyline/interpolation.hpp"
 #include "polyline/polyline_2d.hpp"
 #include "spline/basis.hpp"
 
@@ -35,9 +36,16 @@ class SplineCurve {
 class BezierCurve : public SplineCurve<BezierBase, BezierCurve> {
         using SplineCurve<BezierBase, BezierCurve>::SplineCurve;
 };
-class BSplineCurve : public SplineCurve<BSplineBase<2>, BSplineCurve> {
-        using SplineCurve<BSplineBase<2>, BSplineCurve>::SplineCurve;
+
+template<size_t degree>
+class BSplineCurve : public SplineCurve<BSplineBase<degree>, BSplineCurve<degree>> {
+    using SplineCurve<BSplineBase<degree>, BSplineCurve<degree>>::SplineCurve;
+    
+    public:
+        Interpolation get_curvature(size_t) const;
+        std::conditional<(degree>1), BSplineCurve<degree-1>, BSplineCurve<1>>::type get_derivate() const;
 };
+
 
 template<typename SplineClass, typename T>
 class SymmetricSpline {
@@ -55,17 +63,20 @@ class SymmetricSpline {
         void set_numpoints(size_t);
         int get_numpoints();
     
-    private:
+    protected:
         void apply();
         SplineClass spline_curve;
 };
 
-class SymmetricBSplineCurve : public SymmetricSpline<BSplineCurve, SymmetricBSplineCurve> {
-        using SymmetricSpline<BSplineCurve, SymmetricBSplineCurve>::SymmetricSpline;
+template<size_t degree>
+class SymmetricBSplineCurve : public SymmetricSpline<BSplineCurve<degree>, SymmetricBSplineCurve<degree>> {
+    using SymmetricSpline<BSplineCurve<degree>, SymmetricBSplineCurve<degree>>::SymmetricSpline;
+    public:
+        Interpolation get_curvature(size_t);
 };
 
 class SymmetricBezierCurve : public SymmetricSpline<BezierCurve, SymmetricBezierCurve> {
-        using SymmetricSpline<BezierCurve, SymmetricBezierCurve>::SymmetricSpline;
+    using SymmetricSpline<BezierCurve, SymmetricBezierCurve>::SymmetricSpline;
 };
 
 } // namespace euklid::spline
