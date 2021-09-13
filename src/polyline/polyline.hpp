@@ -40,10 +40,8 @@ template<typename VectorType, typename T>
 
             T operator+ (const T&) const;
             T operator- (const T&) const;
-        
-        private:
-            std::string hash;
-            
+
+            size_t hash() const;            
     };
 
 class PolyLine3D : public PolyLine<Vector3D, PolyLine3D> {

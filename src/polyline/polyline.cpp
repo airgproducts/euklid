@@ -8,6 +8,18 @@ PolyLine<VectorClass, T>::PolyLine(std::vector<std::shared_ptr<VectorClass>>& no
  : nodes(nodes) 
  {}
 
+template<typename VectorClass, typename T>
+size_t PolyLine<VectorClass, T>::hash() const {
+
+    size_t result = this->nodes[0]->hash();
+
+    for (size_t i=1; i<this->nodes.size(); i++) {
+        result = result ^ (this->nodes[i]->hash() << 1);
+    }
+
+    return result;
+}
+
 
 template<typename VectorClass, typename T>
 std::shared_ptr<VectorClass> PolyLine<VectorClass, T>::get(double ik) const {

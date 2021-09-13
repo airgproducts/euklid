@@ -1,6 +1,7 @@
 #pragma once
 
 #include<vector>
+#include<functional>
 #include <iostream>
 #include <iomanip>
 #include <typeinfo>
@@ -37,6 +38,8 @@ class Vector {
         //double dot(const T& v2);
         double distance(const T& v2) const;
         double length() const;
+
+        size_t hash() const;
 
         T normalized() const;
 

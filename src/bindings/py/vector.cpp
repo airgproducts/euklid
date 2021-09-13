@@ -111,6 +111,7 @@ py::class_<VectorType, std::shared_ptr<VectorType>> PyVector(py::module_ m, cons
                 }
                 return result;
             })
+            .def("__hash__", &VectorType::hash)
             .def("__str__", &VectorType::repr)
             .def("__repr__", &VectorType::repr)
             .def(py::self + py::self)
@@ -170,6 +171,7 @@ py::class_<PolyLineType> PyPolyLine(py::module_ m, const char *name) {
             return result;
 
         })
+        .def("__hash__", &PolyLineType::hash)
         .def("tolist", [](PolyLineType& line) {
             py::list result;
 

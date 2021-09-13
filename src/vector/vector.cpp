@@ -171,6 +171,17 @@ std::string Vector<dimensions, T>::repr() const {
     return out.str();
 }
 
+template<size_t dimensions, typename T>
+size_t Vector<dimensions, T>::hash() const {
+    size_t result = std::hash<double>{}(this->get_item(0));
+
+    for (size_t i=1; i<dimensions; i++) {
+        result = result ^ (std::hash<double>{}(this->get_item(i)) << 1);
+    }
+
+    return result;
+}
+
 Vector2D::Vector2D(double x, double y) {
     this->set_item(0, x);
     this->set_item(1, y);
