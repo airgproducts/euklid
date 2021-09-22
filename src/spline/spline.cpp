@@ -290,8 +290,10 @@ template class SplineCurve<BSplineBase<3>, BSplineCurve<3>>;
 template class SplineCurve<BSplineBase<4>, BSplineCurve<4>>;
 template class SymmetricBSplineCurve<2>;
 template class SymmetricBSplineCurve<3>;
+template class SymmetricBSplineCurve<4>;
 template class SymmetricSpline<BSplineCurve<2>, SymmetricBSplineCurve<2>>;
 template class SymmetricSpline<BSplineCurve<3>, SymmetricBSplineCurve<3>>;
+template class SymmetricSpline<BSplineCurve<4>, SymmetricBSplineCurve<4>>;
 template class SymmetricSpline<BezierCurve, SymmetricBezierCurve>;
 
 } // namespace euklid::spline

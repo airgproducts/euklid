@@ -60,6 +60,14 @@ namespace euklid::spline {
             
         PySpline<SymmetricBSplineCurve<2>>(m, "SymmetricBSplineCurve")
             .def("get_curvature", &SymmetricBSplineCurve<2>::get_curvature);
+
+        PySpline<SymmetricBSplineCurve<3>>(m, "SymmetricCubicBSplineCurve")
+            .def("get_curvature", &SymmetricBSplineCurve<3>::get_curvature);
+
+        PySpline<SymmetricBSplineCurve<4>>(m, "SymmetricQuadBSplineCurve")
+            .def("get_curvature", &SymmetricBSplineCurve<4>::get_curvature);
+
+        
         PySpline<SymmetricBezierCurve>(m, "SymmetricBezierCurve");
 
     }
