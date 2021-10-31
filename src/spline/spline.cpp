@@ -195,8 +195,8 @@ T SymmetricSpline<SplineClass, T>::fit(const PolyLine2D& nodes, size_t node_num)
     std::vector<std::shared_ptr<Vector2D>> nodes_new;
 
     nodes_new.push_back(line_1.nodes[0]);
-    nodes_new.push_back(line_2.nodes[0]);
     if ((*line_2.nodes[0]-*line_1.nodes[0]).length() > 1e-6) {
+        nodes_new.push_back(line_2.nodes[0]);
     }
 
     for (size_t i=1; i<numpoints; i++) {
