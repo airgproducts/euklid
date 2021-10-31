@@ -46,7 +46,7 @@ namespace euklid::spline {
             .def("get_derivate", &BSplineCurve<degree>::get_derivate)
             .def("get_curvature", &BSplineCurve<degree>::get_curvature, py::arg("num") = 100);
 
-    };
+    }
 
     void REGISTER(pybind11::module module) {
         pybind11::module m = module.def_submodule("spline");
