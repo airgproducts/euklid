@@ -43,7 +43,7 @@ class BSplineCurve : public SplineCurve<BSplineBase<degree>, BSplineCurve<degree
     
     public:
         Interpolation get_curvature(size_t) const;
-        std::conditional<(degree>1), BSplineCurve<degree-1>, BSplineCurve<1>>::type get_derivate() const;
+        typename std::conditional<(degree>1), BSplineCurve<degree-1>, BSplineCurve<1>>::type get_derivate() const;
 };
 
 
