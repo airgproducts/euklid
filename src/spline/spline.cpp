@@ -262,7 +262,7 @@ Interpolation BSplineCurve<degree>::get_curvature(size_t n) const {
 
 template<size_t degree>
 typename std::conditional<(degree>1), BSplineCurve<degree-1>, BSplineCurve<1>>::type BSplineCurve<degree>::get_derivate() const {
-    using T = std::conditional<(degree>1), BSplineCurve<degree-1>, BSplineCurve<1>>::type;
+    using T = typename std::conditional<(degree>1), BSplineCurve<degree-1>, BSplineCurve<1>>::type;
     auto controlpoints = this->controlpoints.get_segments();
 
     if (controlpoints.size() < 2) {
