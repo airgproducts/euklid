@@ -215,7 +215,7 @@ double PolyLine2D::get_area() const {
         area -= this->nodes[i]->get_item(1) * this->nodes[j]->get_item(0);
     }
 
-    return area;
+    return area/2;
 }
 
 
