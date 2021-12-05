@@ -42,6 +42,9 @@ double BezierBase::get(size_t index, double value) const {
 
 template<size_t degree>
 BSplineBase<degree>::BSplineBase(size_t size) {
+    if (size < degree) {
+        throw std::runtime_error("not enought nodes for bspline");
+    }
 
     // create knots
     size_t total_knots = size + degree + 1;

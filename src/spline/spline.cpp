@@ -6,7 +6,11 @@ namespace euklid::spline {
 template<typename Base, typename T>
 SplineCurve<Base, T>::SplineCurve(PolyLine2D controlpoints) : 
     controlpoints(controlpoints),
-    base(controlpoints.nodes.size())  {}
+    base(controlpoints.nodes.size())  {
+        if (controlpoints.nodes.size() <= 1) {
+            throw std::runtime_error("too short");
+        }
+    }
 
 
 template<typename Base, typename T>
