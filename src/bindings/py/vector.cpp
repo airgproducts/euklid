@@ -263,7 +263,7 @@ namespace euklid::vector {
             .def("get_area", &PolyLine2D::get_area)
             .def("rotate", &PolyLine2D::rotate)
             .def("normvectors", &PolyLine2D::normvectors)
-            .def("offset", &PolyLine2D::offset)
+            .def("offset", &PolyLine2D::offset, py::arg("amount"), py::arg("simple") = false)
             .def("mirror", &PolyLine2D::mirror)
             .def("mirror", [](const PolyLine2D& line){
                 auto v1 = Vector2D(0, 0);

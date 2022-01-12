@@ -3,10 +3,9 @@
 //#include "common.cpp"
 
 
-PolyLine2D PolyLine2D::normvectors() const {
+PolyLine2D PolyLine2D::segment_normals() const {
     auto segments = this->get_segments();
     std::vector<std::shared_ptr<Vector2D>> segment_normals;
-    std::vector<std::shared_ptr<Vector2D>> normvectors;
 
     for (auto segment: segments) {
         Vector2D normal;
@@ -18,6 +17,19 @@ PolyLine2D PolyLine2D::normvectors() const {
 
         segment_normals.push_back(normal_0);
     }
+
+    return PolyLine2D(segment_normals);
+
+}
+
+
+PolyLine2D PolyLine2D::normvectors() const {
+    auto segments = this->get_segments();
+    auto segment_normals = this->segment_normals().nodes;
+
+    std::vector<std::shared_ptr<Vector2D>> normvectors;
+
+
 
     normvectors.push_back(segment_normals[0]);
 
@@ -42,15 +54,75 @@ PolyLine2D PolyLine2D::normvectors() const {
     return PolyLine2D(normvectors);
 }
 
-PolyLine2D PolyLine2D::offset(double amount) const {
-    auto normvectors = this->normvectors().nodes;
-    std::vector<std::shared_ptr<Vector2D>> nodes;
+PolyLine2D PolyLine2D::offset(double amount, bool simple=true) const {
+    if (simple) {
+        auto normvectors = this->normvectors().nodes;
+        std::vector<std::shared_ptr<Vector2D>> nodes;
 
-    for (size_t i=0; i<this->nodes.size(); i++) {
-        nodes.push_back(std::make_shared<Vector2D>(*this->nodes[i] + (*normvectors[i])*amount));
+        for (size_t i=0; i<this->nodes.size(); i++) {
+            nodes.push_back(std::make_shared<Vector2D>(*this->nodes[i] + (*normvectors[i])*amount));
+        }
+
+        return PolyLine2D(nodes);
+    } else {
+        using Segment = std::pair<std::shared_ptr<Vector2D>, std::shared_ptr<Vector2D>>;
+        auto segments = this->get_segments();
+        std::vector<std::shared_ptr<Vector2D>> segments_normalized;
+        PolyLine2D result;
+
+        for (auto segment: segments) {
+            segments_normalized.push_back(std::make_shared<Vector2D>(segment->normalized()));
+        }
+
+
+        auto segment_normals = this->segment_normals().nodes;
+        std::vector<Segment> offset_segments;
+
+        for (size_t i=0; i<this->nodes.size()-1; i++) {
+
+            offset_segments.push_back(Segment {
+                std::make_shared<Vector2D>(*this->nodes[i] + (*segment_normals[i])*amount),
+                std::make_shared<Vector2D>(*this->nodes[i+1] + (*segment_normals[i])*amount)
+            });
+        }
+
+        result.nodes.push_back(std::make_shared<Vector2D>(
+            *this->nodes[0] + *segment_normals[0] * amount
+        ));
+
+        for (size_t i=0; i<this->nodes.size()-2; i++) {
+            auto segment_1 = segments_normalized[i];
+            auto segment_2 = segments_normalized[i+1];
+            double sin_angle = segment_1->cross(*segment_2);
+            if (std::abs(sin_angle) < 0.1) {
+                result.nodes.push_back(std::make_shared<Vector2D>(
+                    (*offset_segments[i].second + *offset_segments[i+1].first)/2)
+                );
+            } else if (sin_angle * amount > 0.) {
+                // outside turn
+                auto cut = cut_2d(
+                    *offset_segments[i].first, *offset_segments[i].second,
+                    *offset_segments[i+1].first, *offset_segments[i+1].second
+                );
+                if (cut.success) {
+                    result.nodes.push_back(std::make_shared<Vector2D>(cut.point));
+                } else {
+                    throw std::runtime_error("Dam!");
+                }
+                // todo: make a circle
+            } else {
+                // inside turn -> add both and cut later
+                result.nodes.push_back(offset_segments[i].second);
+                result.nodes.push_back(offset_segments[i+1].first);
+            }
+        }
+
+        result.nodes.push_back(std::make_shared<Vector2D>(
+            *this->nodes.back() + *segment_normals.back() * amount
+        ));
+
+        return PolyLine2D(result);
     }
-
-    return PolyLine2D(nodes);
 }
 
 static const double tolerance = 1e-5;

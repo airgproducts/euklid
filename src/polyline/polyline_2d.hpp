@@ -10,8 +10,9 @@ class PolyLine2D : public PolyLine<Vector2D, PolyLine2D> {
         using PolyLine<Vector2D, PolyLine2D>::PolyLine;
         
         //PolyLine2D resample(int num_points);
+        PolyLine2D segment_normals() const;
         PolyLine2D normvectors() const;
-        PolyLine2D offset(double amount) const;
+        PolyLine2D offset(double, bool) const;
 
         std::vector<std::pair<double, double>> cut(const Vector2D& p1, const Vector2D& p2) const;
         std::pair<double, double> cut(const Vector2D& p1, const Vector2D& p2, double nearest_ik) const;
