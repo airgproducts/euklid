@@ -293,7 +293,7 @@ double PolyLine2D::get_area() const {
 
 PolyLine2D PolyLine2D::mirror(Vector2D& p1, Vector2D& p2) const {
     auto diff = p1 - p2;
-    auto normvector = Vector2D(-diff[1], diff[0]);
+    auto normvector = Vector2D(-diff[1], diff[0]).normalized();
     std::vector<std::shared_ptr<Vector2D>> result;
 
     for (auto node: this->nodes) {
