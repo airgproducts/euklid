@@ -290,6 +290,62 @@ double PolyLine2D::get_area() const {
     return area/2;
 }
 
+std::vector<std::shared_ptr<Vector2D>> PolyLine2D::boundary() const {
+    double min_x = std::numeric_limits<double>::infinity();
+    double max_x = -std::numeric_limits<double>::infinity();
+    double min_y = min_x;
+    double max_y = max_x;
+
+    for (auto vec: this->nodes) {
+        min_x = std::min<double>(min_x, vec->get_item(0));
+        max_x = std::max<double>(max_x, vec->get_item(0));
+        min_y = std::min<double>(min_y, vec->get_item(1));
+        max_y = std::max<double>(max_y, vec->get_item(1));
+    }
+
+    std::vector<std::shared_ptr<Vector2D>> boundary;
+
+    boundary.push_back(std::make_shared<Vector2D>(min_x, min_y));
+    boundary.push_back(std::make_shared<Vector2D>(max_x, min_y));
+    boundary.push_back(std::make_shared<Vector2D>(max_x, max_y));
+    boundary.push_back(std::make_shared<Vector2D>(min_x, max_y));
+
+    return boundary;
+}
+
+bool PolyLine2D::contains(const Vector2D& p1) const {
+    // todo check boundary before
+
+    for (auto vec: this->boundary()) {
+        auto diff = Vector2D(1,0);
+        //auto diff = (*vec-p1);
+        if (diff.length() > 1e-3) {
+            unsigned int valid_cuts = 0;
+            auto p2 = p1 + diff*2;
+
+            auto cuts = this->cut(p1, p2);
+
+            if (cuts.size() == 0) {
+                return false;
+            }
+
+            for (auto cut: cuts) {
+                if (cut.first < 0) {}
+                else if (cut.first >= this->nodes.size()-1) {}
+                else if (cut.second < 0) {}
+                else {
+                    valid_cuts += 1;
+                }
+            }
+            
+            return valid_cuts % 2 > 0;
+
+        }
+
+    }
+
+    return false;
+}
 
 PolyLine2D PolyLine2D::mirror(Vector2D& p1, Vector2D& p2) const {
     auto diff = p1 - p2;
