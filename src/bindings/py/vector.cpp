@@ -88,8 +88,11 @@ py::class_<VectorType, std::shared_ptr<VectorType>> PyVector(py::module_ m, cons
                 return vec;
             }))
             .def(py::init())
-            .def("__getitem__", [](const VectorType &v, size_t i) {
-                    return v.get_item(i);
+            .def("__getitem__", [](const VectorType &v, int i) {
+                if (i < 0 || i >= VectorType::dimension) {
+                    throw std::out_of_range("Out of range");
+                }
+                return v.get_item(i);
             })
             .def("__setitem__", [](VectorType &v, size_t i, double value){
                 v.set_item(i, value);
@@ -114,6 +117,26 @@ py::class_<VectorType, std::shared_ptr<VectorType>> PyVector(py::module_ m, cons
             .def("__hash__", &VectorType::hash)
             .def("__str__", &VectorType::repr)
             .def("__repr__", &VectorType::repr)
+            .def("__eq__", [](const VectorType& self, const VectorType& other) {
+                for (int i=0; i<VectorType::dimension; i++) {
+                    if (self.get_item(i) != other.get_item(i)) {
+                        return false;
+                    }
+                }
+                return true;
+            })
+            .def("__lt__", [](const VectorType& self, const VectorType& other) {
+                return self.length() < other.length();
+            })
+            .def("__le__", [](const VectorType& self, const VectorType& other) {
+                return self.length() <= other.length();
+            })
+            .def("__gt__", [](const VectorType& self, const VectorType& other) {
+                return self.length() > other.length();
+            })
+            .def("__ge__", [](const VectorType& self, const VectorType& other) {
+                return self.length() >= other.length();
+            })
             .def(py::self + py::self)
             .def(py::self - py::self)
             .def(py::self * py::self)
