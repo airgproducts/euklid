@@ -287,7 +287,9 @@ T PolyLine<VectorClass, T>::add(const T& other) const {
     std::vector<std::shared_ptr<VectorClass>> new_nodes;
 
     if (this->nodes.size() != other.nodes.size()){
-        throw std::runtime_error("PolyLine sizes don't match!");
+        std::string error = "PolyLine sizes don't match! (";
+        error += std::to_string(this->nodes.size()) + "/" + std::to_string(other.nodes.size());
+        throw std::runtime_error(error);
     }
 
     for (unsigned int i=0; i<this->nodes.size(); i++) {
