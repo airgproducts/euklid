@@ -138,7 +138,7 @@ std::vector<std::pair<double, double>> PolyLine2D::cut(const Vector2D& p1, const
     auto last_result = result;
 
     
-    if (result.success && result.ik_1 <= 0) {
+    if (result.success && result.ik_1 <= tolerance) {
         results.push_back(std::pair<double, double>(result.ik_1, result.ik_2));
     }
 
@@ -146,11 +146,11 @@ std::vector<std::pair<double, double>> PolyLine2D::cut(const Vector2D& p1, const
     for (size_t i=0; i<this->nodes.size()-1; i++) {
         result = cut_2d(*this->nodes[i], *this->nodes[i+1], p1, p2);
 
-        if (result.success && 0. < result.ik_1 && result.ik_1 <= 1.) {
+        if (result.success && tolerance < result.ik_1 && result.ik_1 <= 1.-tolerance) {
             results.push_back(std::pair<double, double>(result.ik_1+i, result.ik_2));
-        } else if (-tolerance < result.ik_1 && result.ik_1 <= 0 && 1 < last_result.ik_1 && last_result.ik_1 < 1+tolerance) {
+        } else if (-tolerance < result.ik_1 && result.ik_1 <= tolerance && 1.-tolerance < last_result.ik_1 && last_result.ik_1 <= 1+tolerance) {
             // catch cuts falling straight on a point
-            results.push_back(std::pair<double, double>(last_result.ik_1+i-1, last_result.ik_2));
+            results.push_back(std::pair<double, double>(static_cast<double>(i), last_result.ik_2));
         }
 
 
@@ -158,7 +158,7 @@ std::vector<std::pair<double, double>> PolyLine2D::cut(const Vector2D& p1, const
     }
 
     // add value if for the last cut ik_1 is greater than 1 (extrapolate end)
-    if (result.success && result.ik_1 > 1) {
+    if (result.success && result.ik_1 > 1.-tolerance) {
             results.push_back(std::pair<double, double>(result.ik_1+this->nodes.size()-2, result.ik_2));
     }
 
