@@ -93,27 +93,38 @@ PolyLine2D PolyLine2D::offset(double amount, bool simple=true) const {
         for (size_t i=0; i<this->nodes.size()-2; i++) {
             auto segment_1 = segments_normalized[i];
             auto segment_2 = segments_normalized[i+1];
-            double sin_angle = segment_1->cross(*segment_2);
-            if (std::abs(sin_angle) < 0.1) {
+            double cos_angle = segment_1->dot(*segment_2);
+            if (cos_angle > 0.99) {
                 result.nodes.push_back(std::make_shared<Vector2D>(
                     (*offset_segments[i].second + *offset_segments[i+1].first)/2)
                 );
-            } else if (sin_angle * amount > 0.) {
-                // outside turn
+            } else {
+                
                 auto cut = cut_2d(
                     *offset_segments[i].first, *offset_segments[i].second,
                     *offset_segments[i+1].first, *offset_segments[i+1].second
                 );
-                if (cut.success) {
+                if (cut.success && cut.ik_1 > 0. && cut.ik_2 < 1.) {
                     result.nodes.push_back(std::make_shared<Vector2D>(cut.point));
-                } else {
-                    throw std::runtime_error("Dam!");
+                } else if (result.nodes.size() > 2) {
+                    
+                    try {
+                        auto cut = result.cut(*offset_segments[i+1].first, *offset_segments[i+1].second, result.nodes.size()-1);
+
+                        if (cut.second < 1) {
+                            if (cut.first < result.nodes.size()-1) {
+                                result = result.get(0, cut.first);
+                            } else {
+                                result.nodes.push_back(result.get(cut.first));
+                            }
+                        }
+                    }
+                    catch (std::runtime_error&) {
+
+                    }
                 }
+#
                 // todo: make a circle
-            } else {
-                // inside turn -> add both and cut later
-                result.nodes.push_back(offset_segments[i].second);
-                result.nodes.push_back(offset_segments[i+1].first);
             }
         }
 
@@ -121,7 +132,7 @@ PolyLine2D PolyLine2D::offset(double amount, bool simple=true) const {
             *this->nodes.back() + *segment_normals.back() * amount
         ));
 
-        return PolyLine2D(result);
+        return PolyLine2D(result).fix_errors();
     }
 }
 

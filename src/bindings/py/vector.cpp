@@ -99,7 +99,7 @@ py::class_<VectorType, std::shared_ptr<VectorType>> PyVector(py::module_ m, cons
             })
             .def("__len__", [](const VectorType& v) {return v.dimension;})
             .def("__iter__", [](const VectorType& v){
-                return py::make_iterator(v.coordinates, v.coordinates+v.dimension);
+                return py::make_iterator(v.coordinates);
             })
             .def("__copy__",  [](VectorType& self) {
                 return self.copy();
