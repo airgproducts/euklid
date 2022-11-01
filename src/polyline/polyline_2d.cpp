@@ -132,7 +132,7 @@ PolyLine2D PolyLine2D::offset(double amount, bool simple=true) const {
             *this->nodes.back() + *segment_normals.back() * amount
         ));
 
-        return PolyLine2D(result).fix_errors();
+        return PolyLine2D(result);
     }
 }
 
