@@ -297,6 +297,8 @@ namespace euklid::vector {
             .def("cut", py::overload_cast<const Vector2D&, const Vector2D&, const double>(&PolyLine2D::cut, py::const_))
             .def("cut", py::overload_cast<const PolyLine2D&>(&PolyLine2D::cut, py::const_))
             .def("cut", py::overload_cast<const PolyLine2D&, const double>(&PolyLine2D::cut, py::const_))
+            .def("close", &PolyLine2D::close)
+            .def("bool_union", &PolyLine2D::bool_union)
             .def("contains", &PolyLine2D::contains)
             .def("fix_errors", &PolyLine2D::fix_errors);
 

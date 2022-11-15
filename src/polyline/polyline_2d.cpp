@@ -298,7 +298,7 @@ double PolyLine2D::get_area() const {
         area -= this->nodes[i]->get_item(1) * this->nodes[j]->get_item(0);
     }
 
-    return area/2;
+    return std::abs(area/2);
 }
 
 std::vector<std::shared_ptr<Vector2D>> PolyLine2D::boundary() const {
@@ -356,6 +356,102 @@ bool PolyLine2D::contains(const Vector2D& p1) const {
     }
 
     return false;
+}
+
+PolyLine2D PolyLine2D::close() const {
+    PolyLine2D new_line = this->copy();
+
+    if ((*new_line.nodes.back() - *new_line.nodes.front()).length() > small_d) {
+        new_line.nodes.push_back(new_line.nodes.front());
+    }
+
+
+    return new_line;
+}
+
+std::vector<PolyLine2D> PolyLine2D::bool_union(const PolyLine2D& other) const {
+    using cut = std::pair<double, double>;
+    std::vector<PolyLine2D> result;
+
+    auto first = this->close();
+    auto second = other.close();
+
+    auto cuts = first.cut(second);
+
+    if (cuts.size() == 0) {
+        if (first.contains(*second.nodes[0])) {
+            result.push_back(second);
+        } else if (second.contains(*first.nodes[0])) {
+            result.push_back(first);
+        }
+    } else {
+        auto new_line = new PolyLine2D();
+        
+        std::sort(cuts.begin(), cuts.end(), [](cut& a, cut& b) {
+            return a.first < b.first;
+        });
+
+
+        cut start = {0, 0};
+        cut end = {first.nodes.size()-1, second.nodes.size()-1};
+
+        
+        if (cuts.size() > 1) {
+            if (cuts[0].second > cuts[1].second) {
+                start.second = second.nodes.size() - 1;
+            }
+            if (cuts.back().second < cuts[cuts.size()-2].second) {
+                end.second = 0;
+            }
+        }
+        cuts.insert(cuts.begin(), start);
+        cuts.push_back(end);
+
+        //cut start_positions = {0, 0};
+
+        for (unsigned int i = 0; i < cuts.size()-1; i++) {
+            auto start_positions = cuts[i];
+            auto end_positions = cuts[i+1];
+
+            float ik_middle = (std::get<0>(start_positions) + std::get<0>(end_positions))/2;
+            bool first_inside_second = second.contains(*first.get(ik_middle));
+            bool second_inside_first = false;
+            unsigned int node_offset = new_line->nodes.size() > 0 ? 1 : 0;
+
+            ik_middle = (std::get<1>(start_positions) + std::get<1>(end_positions))/2;
+            second_inside_first = first.contains(*second.get(ik_middle));
+
+            if (i > 0 && first_inside_second && second_inside_first) {
+                auto to_insert = first.get(std::get<0>(start_positions), std::get<0>(end_positions));
+                new_line->nodes.insert(new_line->nodes.end(), to_insert.nodes.begin(), to_insert.nodes.end());
+                to_insert = second.get(std::get<1>(end_positions), std::get<1>(start_positions));
+                new_line->nodes.insert(new_line->nodes.end(), to_insert.nodes.begin()+1, to_insert.nodes.end());
+
+                result.push_back(new_line->close());
+                new_line = new PolyLine2D();
+            }
+
+            else if (first_inside_second) {
+                auto to_insert = first.get(std::get<0>(start_positions), std::get<0>(end_positions));
+                new_line->nodes.insert(new_line->nodes.end(), to_insert.nodes.begin() + node_offset, to_insert.nodes.end());
+            } else if (second_inside_first) {
+                auto to_insert = second.get(std::get<1>(start_positions), std::get<1>(end_positions));
+                new_line->nodes.insert(new_line->nodes.end(), to_insert.nodes.begin() + node_offset, to_insert.nodes.end());
+            }
+
+            //start_positions = cuts[i];
+        }
+
+        if (new_line->nodes.size() > 0) {
+            result.push_back(*new_line);
+        }
+    }
+
+    
+
+
+    return result;
+
 }
 
 PolyLine2D PolyLine2D::mirror(Vector2D& p1, Vector2D& p2) const {
