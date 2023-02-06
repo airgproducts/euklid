@@ -12,7 +12,16 @@ A c++ library with bindings for python to help dealing with common CAD-like oper
 ## Installation
 
 
-install via pip:
+### install via pip:
 
 `pip install euklid`
 
+### Compile from source:
+
+``` bash
+git clone https://github.com/airgproducts/euklid
+cd euklid
+git submodule init
+git submodule update
+pip install .
+```
