@@ -24,7 +24,7 @@ set(PYBIND11_CPP_STANDARD -std=c++14)
 if(${USE_SUBMODULE_LIBS} AND EXISTS ${PROJECT_SOURCE_DIR}/lib/eigen/CMakeLists.txt)
     add_subdirectory(${PROJECT_SOURCE_DIR}/lib/eigen)
 else()
-    find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+    find_package (Eigen3 3.4 REQUIRED NO_MODULE)
 endif()
 
 find_package(OpenMP)
