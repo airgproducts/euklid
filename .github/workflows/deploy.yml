@@ -47,6 +47,7 @@ jobs:
           pip install wheel
           pip install mypy
           python setup.py bdist_wheel
+          python setup.py sdist
       - name: Upload wheel
         uses: actions/upload-artifact@v1
         with:
