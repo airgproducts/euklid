@@ -73,7 +73,7 @@ class CMakeBuild(build_ext):
             cmake_args += [
                 "-DWALL=off",
                 "-DUSE_SUBMODULE_LIBS=off",
-                "-DBUILD_SHARED_LIBS=ON"
+                "-DBUILD_SHARED_LIBS=ON",
                 '-G "Ninja"'
                 ]
 
