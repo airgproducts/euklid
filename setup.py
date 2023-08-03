@@ -16,6 +16,8 @@ from setuptools.command.install_lib import install_lib
 from setuptools.command.install import install
 
 
+version = "0.2.4"
+
 DEBUG = False
 if "--debug" in sys.argv:
     DEBUG = True
@@ -111,10 +113,6 @@ class CMakeBuild(build_ext):
 
         
 
-version = "-"
-with open("src/version.hpp") as version_file:
-    #print(version_file.read())
-    version = re.findall(r"version\s=\s['\"]([0-9\._]+)['\"]", version_file.read())[0]
 
 with open("README.md") as readme_file:
     long_description = readme_file.read()
@@ -124,6 +122,7 @@ setup(
     name='euklid',
     version=version,
     description="common vector operations [2D/3D]",
+    package_data={"version": ["src/version.hpp"]},
     ext_modules=[CMakeExtension('.')],
     cmdclass={"build_ext": CMakeBuild, "install_lib": InstallStubs},
     license='MIT',
