@@ -104,10 +104,7 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_lib):
             stubgen_path = self.build_temp
 
-        subprocess.check_call([sys.executable, 'stubs.py', stubgen_path], shell=True)
-
-
-        
+        subprocess.check_call([sys.executable, 'stubs.py', stubgen_path])
 
 
 with open("README.md") as readme_file:
