@@ -1,4 +1,3 @@
-import imp
 from importlib.resources import path
 import sys
 import os

@@ -14,7 +14,7 @@ from setuptools.command.install_lib import install_lib
 from setuptools.command.install import install
 
 
-version = "0.2.5"
+version = "0.2.6"
 
 DEBUG = False
 if "--debug" in sys.argv:
@@ -104,10 +104,7 @@ class CMakeBuild(build_ext):
         if not os.path.exists(self.build_lib):
             stubgen_path = self.build_temp
 
-        try:
-            subprocess.check_call([sys.executable, 'stubs.py', stubgen_path])
-        except subprocess.CalledProcessError:
-            print("no mypy found")
+        subprocess.check_call([sys.executable, 'stubs.py', stubgen_path], shell=True)
 
 
         
