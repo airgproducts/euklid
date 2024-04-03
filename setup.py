@@ -14,7 +14,7 @@ from setuptools.command.install_lib import install_lib
 from setuptools.command.install import install
 
 
-version = "0.2.6"
+version = "0.2.7"
 
 DEBUG = False
 if "--debug" in sys.argv:
