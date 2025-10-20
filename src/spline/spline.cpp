@@ -15,7 +15,7 @@ SplineCurve<Base, T>::SplineCurve(PolyLine2D controlpoints) :
 
 template<typename Base, typename T>
 T SplineCurve<Base, T>::copy() const {
-    return T(this->controlpoints);
+    return T(this->controlpoints.copy());
 }
 
 template<typename Base, typename T>
@@ -129,7 +129,7 @@ SymmetricSpline<SplineClass, T>::SymmetricSpline(PolyLine2D controlpoints) : con
 
 template<typename SplineClass, typename T>
 T SymmetricSpline<SplineClass, T>::copy() const {
-    return T(this->controlpoints);
+    return T(this->controlpoints.copy());
 }
 
 template<typename SplineClass, typename T>

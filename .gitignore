@@ -2,8 +2,11 @@ build
 dist
 .ipynb_checkpoints
 *.egg-info
+*.whl
 *.so
 .mypy_cache
 
 **/__pycache__
 **/*.pyc
+
+lib
