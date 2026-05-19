@@ -245,35 +245,58 @@ template class Vector<2, Vector2D>;
 
 CutResult cut_2d(const Vector2D& l1_p1, const Vector2D& l1_p2, const Vector2D& l2_p1, const Vector2D& l2_p2) {
     CutResult result;
-    // Line AB represented as a1x + b1y = c1
-    double a1 = l1_p2[1] - l1_p1[1];
-    double b1 = l1_p1[0] - l1_p2[0];
-    double c1 = a1*l1_p1[0] + b1*l1_p1[1];
-  
-    // Line CD represented as a2x + b2y = c2 
-    double a2 = l2_p2[1] - l2_p1[1];
-    double b2 = l2_p1[0] - l2_p2[0];
-    double c2 = a2*l2_p1[0] + b2*l2_p1[1];
-  
-    double determinant = a1*b2 - a2*b1; 
-  
-    if (determinant == 0) { 
-        // Parallel lines!
-        result.success = false;
-    } else { 
-        double x = (b2*c1 - b1*c2)/determinant; 
-        double y = (a1*c2 - a2*c1)/determinant; 
 
-        result.success = true;
-        result.point.set_item(0, x);
-        result.point.set_item(1, y);
+    result.success = false;
 
-        auto diff1 = l1_p2 - l1_p1;
-        result.ik_1 = (result.point - l1_p1).dot(diff1) / diff1.dot(diff1);
+    // Improved numerical stability constants
+    static const double MIN_SEGMENT_LENGTH = 1e-8;
+    static const double PARALLEL_THRESHOLD = 1e-10;
 
-        auto diff2 = (l2_p2 - l2_p1);
-        result.ik_2 = (result.point - l2_p1).dot(diff2) / diff2.dot(diff2);
+    // Compute segment vectors (KEEP THIS CONVENTION)
+    Vector2D d1 = l1_p2 - l1_p1;
+    Vector2D d2 = l2_p2 - l2_p1;
+
+    double d1_len_sq = d1.dot(d1);
+    double d2_len_sq = d2.dot(d2);
+
+    // Check for degenerate segments
+    if (d1_len_sq < MIN_SEGMENT_LENGTH * MIN_SEGMENT_LENGTH ||
+        d2_len_sq < MIN_SEGMENT_LENGTH * MIN_SEGMENT_LENGTH) {
+        return result;
     }
+
+    // Cross product
+    double cross = d1[0] * d2[1] - d1[1] * d2[0];
+
+    // Parallel check (unchanged, fine)
+    double d1_len = std::sqrt(d1_len_sq);
+    double d2_len = std::sqrt(d2_len_sq);
+    double cross_normalized = cross / (d1_len * d2_len);
+
+    if (std::abs(cross_normalized) < PARALLEL_THRESHOLD) {
+        return result;
+    }
+
+    // -----------------------------
+    // CONSISTENT CONVENTION SECTION
+    // -----------------------------
+
+    // IMPORTANT: anchor everything to l1_p1 (same as projection method)
+    Vector2D r = l2_p1 - l1_p1;
+
+    // Solve: l1_p1 + t*d1 intersects line2
+    // t = cross(r, d2) / cross(d1, d2)
+    // NO extra sign flips
+    result.ik_1 = (r[0] * d2[1] - r[1] * d2[0]) / cross;
+
+    // Solve parameter on line2 in consistent orientation
+    result.ik_2 = (r[0] * d1[1] - r[1] * d1[0]) / cross;
+
+    // Compute point from line 1 (same as projection version)
+    result.point = l1_p1 + d1 * result.ik_1;
+
+    result.success = true;
+    
 
     return result;
 }

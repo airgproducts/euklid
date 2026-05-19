@@ -55,6 +55,13 @@ PolyLine2D PolyLine2D::normvectors() const {
 }
 
 PolyLine2D PolyLine2D::offset(double amount, bool simple=true) const {
+    const double EPSILON = 1e-10;
+    const double MITER_LIMIT = 10.0;  // Maximum miter length as multiple of offset amount
+    
+    if (this->nodes.size() < 2) {
+        return *this;
+    }
+
     if (simple) {
         auto normvectors = this->normvectors().nodes;
         std::vector<std::shared_ptr<Vector2D>> nodes;
@@ -74,60 +81,76 @@ PolyLine2D PolyLine2D::offset(double amount, bool simple=true) const {
             segments_normalized.push_back(std::make_shared<Vector2D>(segment->normalized()));
         }
 
-
         auto segment_normals = this->segment_normals().nodes;
         std::vector<Segment> offset_segments;
 
         for (size_t i=0; i<this->nodes.size()-1; i++) {
-
             offset_segments.push_back(Segment {
                 std::make_shared<Vector2D>(*this->nodes[i] + (*segment_normals[i])*amount),
                 std::make_shared<Vector2D>(*this->nodes[i+1] + (*segment_normals[i])*amount)
             });
         }
 
+        // Add first point
         result.nodes.push_back(std::make_shared<Vector2D>(
             *this->nodes[0] + *segment_normals[0] * amount
         ));
 
+        // Process intermediate vertices
         for (size_t i=0; i<this->nodes.size()-2; i++) {
             auto segment_1 = segments_normalized[i];
             auto segment_2 = segments_normalized[i+1];
             double cos_angle = segment_1->dot(*segment_2);
-            if (cos_angle > 0.99) {
+            
+            // Check if segments are nearly parallel or degenerate
+            if (cos_angle > 0.999 || segment_1->length() < EPSILON || segment_2->length() < EPSILON) {
+                // Nearly parallel - use average of the two offset points
                 result.nodes.push_back(std::make_shared<Vector2D>(
-                    (*offset_segments[i].second + *offset_segments[i+1].first)/2)
+                    (*offset_segments[i].second + *offset_segments[i+1].first) / 2.0)
                 );
             } else {
-                
+                // Find intersection of offset segments
                 auto cut = cut_2d(
                     *offset_segments[i].first, *offset_segments[i].second,
                     *offset_segments[i+1].first, *offset_segments[i+1].second
                 );
-                if (cut.success && cut.ik_1 > 0. && cut.ik_2 < 1.) {
-                    result.nodes.push_back(std::make_shared<Vector2D>(cut.point));
-                } else if (result.nodes.size() > 2) {
+                
+                if (cut.success) {
+                    // Check if intersection is reasonable
+                    // ik_1 should be close to 1.0 (near end of first segment)
+                    // ik_2 should be close to 0.0 (near start of second segment)
+                    bool reasonable_intersection = 
+                        (cut.ik_1 > 0.5 && cut.ik_1 < 1.5) && 
+                        (cut.ik_2 > -0.5 && cut.ik_2 < 0.5);
                     
-                    try {
-                        auto cut = result.cut(*offset_segments[i+1].first, *offset_segments[i+1].second, result.nodes.size()-1);
-
-                        if (cut.second < 1) {
-                            if (cut.first < result.nodes.size()-1) {
-                                result = result.get(0, cut.first);
-                            } else {
-                                result.nodes.push_back(result.get(cut.first));
-                            }
+                    if (reasonable_intersection) {
+                        // Check miter limit to avoid spikes at acute angles
+                        Vector2D original_vertex = *this->nodes[i+1];
+                        double miter_distance = (cut.point - original_vertex).length();
+                        double max_miter_distance = std::abs(amount) * MITER_LIMIT;
+                        
+                        if (miter_distance <= max_miter_distance) {
+                            // Good intersection - use it
+                            result.nodes.push_back(std::make_shared<Vector2D>(cut.point));
+                        } else {
+                            // Miter limit exceeded - use bevel join (two points)
+                            result.nodes.push_back(std::make_shared<Vector2D>(*offset_segments[i].second));
+                            result.nodes.push_back(std::make_shared<Vector2D>(*offset_segments[i+1].first));
                         }
+                    } else {
+                        // Intersection is outside reasonable range - use bevel join
+                        result.nodes.push_back(std::make_shared<Vector2D>(*offset_segments[i].second));
+                        result.nodes.push_back(std::make_shared<Vector2D>(*offset_segments[i+1].first));
                     }
-                    catch (std::runtime_error&) {
-
-                    }
+                } else {
+                    // No intersection found - use bevel join
+                    result.nodes.push_back(std::make_shared<Vector2D>(*offset_segments[i].second));
+                    result.nodes.push_back(std::make_shared<Vector2D>(*offset_segments[i+1].first));
                 }
-#
-                // todo: make a circle
             }
         }
 
+        // Add last point
         result.nodes.push_back(std::make_shared<Vector2D>(
             *this->nodes.back() + *segment_normals.back() * amount
         ));
